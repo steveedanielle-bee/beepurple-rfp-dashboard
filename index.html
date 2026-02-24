@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>BeePurple Sales Pipeline</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'DM Sans',sans-serif;background:#0F0E13;}</style>
-<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeePurple RFP Pipeline</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐝</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0F0E13; }
+  </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const { useState, useMemo } = React;
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useMemo, useCallback } = React;
+
 
 const C={bg:"#0F0E13",sf:"#18171E",cd:"#1E1D26",el:"#252430",bd:"#2E2D3A",gd:"#D4A853",gl:"#E8C878",gm:"rgba(212,168,83,0.15)",pp:"#9B6BC2",pl:"#B88EDB",pm:"rgba(155,107,194,0.12)",tl:"#4DB8A8",tm:"rgba(77,184,168,0.1)",tx:"#E8E6EF",mu:"#8B8799",dm:"#5C5870",ok:"#5CC07E",wn:"#E8A94D",bd2:"#D47272",ht:"#FF4444",wh:"#fff"};
 const f="'DM Sans',sans-serif";
 const ICP=[{id:"state_doh",l:"State DoH"},{id:"recovery_center",l:"Recovery Centers"},{id:"treatment_center",l:"Treatment Centers"},{id:"court",l:"Drug Courts"},{id:"recovery_house",l:"Recovery Houses"},{id:"ccbhc",l:"CCBHCs"},{id:"peer_org",l:"Peer Support Orgs"}];
 
 const RFPS=[
-{id:"1",title:"STREETS Initiative — Safety Through Recovery, Engagement & Evidence-based Treatment and Supports",angle:"icp",status:"new",verified:true,fit_score:96,agency:"HHS / SAMHSA",state:"National (8 pilot localities)",amount:"$100M total ($12.5M avg per locality)",deadline:"2026-06-30",overview:"The STREETS Initiative is a $100 million centerpiece of the Trump administration's Great American Recovery effort, announced Feb 2, 2026 by HHS Secretary Kennedy. It funds targeted outreach, psychiatric care, medical stabilization, crisis intervention, and connections to stable housing for Americans experiencing homelessness and addiction.",fit_reason:"Major ICP opportunity. Pilot communities need technology to track recovery journeys, coordinate outreach teams, and report outcomes. BeePurple maps directly.",requirements:["Client tracking across crisis-treatment-housing continuum","Outcome measurement showing sustained recovery","Mobile-accessible for field outreach workers","Federal compliance reporting"],icp_types:["recovery_center","treatment_center","peer_org"],source_url:"https://www.hhs.gov/about/news/2026/02/02/hhs-announces-100-million-streets-initiative.html",
+{id:"1",title:"STREETS Initiative — Safety Through Recovery, Engagement & Evidence-based Treatment and Supports",angle:"icp",status:"new",verified:true,fit_score:96,agency:"HHS / SAMHSA",state:"National (8 pilot localities)",amount:"$100M total ($12.5M avg per locality)",deadline:"2026-06-30",overview:"The STREETS Initiative is a $100 million centerpiece of the Trump administration's Great American Recovery effort, announced Feb 2, 2026 by HHS Secretary Kennedy. It funds targeted outreach, psychiatric care, medical stabilization, crisis intervention, and connections to stable housing for Americans experiencing homelessness and addiction.",fit_reason:"Major ICP opportunity. Pilot communities need technology to track recovery journeys, coordinate outreach teams, and report outcomes. BeePurple maps directly.",requirements:["Client tracking across crisis-treatment-housing continuum","Outcome measurement showing sustained recovery","Mobile-accessible for field outreach workers","Federal compliance reporting"],icp_types:["recovery_center","treatment_center","peer_org"],source_url:"https://www.hhs.gov/press-room/secretary-kennedy-announces-100-million-investment-great-american-recovery.html",
 contacts:[
 {name:"Merakey Philadelphia",role:"CCBHC + Kensington crisis — street outreach focus",email:"info@merakey.org"},
 {name:"Healing Transitions",role:"EXISTING CUSTOMER — Rapid Responder Program model",email:""},
@@ -29,7 +34,7 @@ contacts:[
 {name:"Faces & Voices of Recovery",role:"National advocacy RCO",email:"info@facesandvoicesofrecovery.org"},
 {name:"Centerstone",role:"Multi-state CCBHC, 180K+ clients",email:"dguth@centerstone.org"},
 ]},
-{id:"2",title:"SAMHSA Building Communities of Recovery ($8.5M FY2026)",angle:"icp",status:"new",verified:true,fit_score:97,agency:"SAMHSA — Center for Substance Abuse Treatment",state:"National",amount:"$8.5M total",deadline:"2026-06-30",overview:"The Building Communities of Recovery program enables the development, expansion, and enhancement of recovery community organizations (RCOs).",fit_reason:"Directly targets BeePurple's core customer. RCOs receiving BCR grants need technology for client tracking and impact reporting.",requirements:["Peer recovery support services tracking","Client interaction documentation","Outcome measurement for SAMHSA compliance"],icp_types:["recovery_center","peer_org"],source_url:"https://www.samhsa.gov/grants/grants-dashboard",
+{id:"2",title:"SAMHSA Building Communities of Recovery ($8.5M FY2026)",angle:"icp",status:"new",verified:true,fit_score:97,agency:"SAMHSA — Center for Substance Abuse Treatment",state:"National",amount:"$8.5M total",deadline:"2026-06-30",overview:"The Building Communities of Recovery program enables the development, expansion, and enhancement of recovery community organizations (RCOs).",fit_reason:"Directly targets BeePurple's core customer. RCOs receiving BCR grants need technology for client tracking and impact reporting.",requirements:["Peer recovery support services tracking","Client interaction documentation","Outcome measurement for SAMHSA compliance"],icp_types:["recovery_center","peer_org"],source_url:"https://www.samhsa.gov/grants/grant-announcements/ti-22-014",
 contacts:[
 {name:"CCAR",role:"Current BCR grantee, pioneer RCO",email:"training@ccar.us"},
 {name:"Young People in Recovery",role:"Current BCR grantee, 40+ chapters",email:"info@youngpeopleinrecovery.org"},
@@ -45,32 +50,32 @@ contacts:[
 {name:"Marie Williams",role:"TN DMHSAS Commissioner — $73.6M block grant",email:"marie.williams@tn.gov"},
 {name:"Zac Wilson",role:"KS KDADS Peer Program — block grant health IT",email:"Zac.Wilson@ks.gov"},
 ]},
-{id:"4",title:"SAMHSA FY2026 Drug Courts Program ($74M Appropriation)",angle:"icp",status:"new",verified:true,fit_score:87,agency:"SAMHSA — Center for Substance Abuse Treatment",state:"National",amount:"$74M total",deadline:"2026-05-30",overview:"Congress appropriated $74 million for SAMHSA Drug Courts in FY2026, with direction to expand training and technical assistance.",fit_reason:"Drug courts need case management tech for participant tracking, compliance monitoring, and outcome measurement.",requirements:["Participant tracking","Treatment compliance monitoring","Judicial review scheduling","Outcome measurement"],icp_types:["court"],source_url:"https://www.samhsa.gov/grants/grants-dashboard",
+{id:"4",title:"SAMHSA FY2026 Drug Courts Program ($74M Appropriation)",angle:"icp",status:"new",verified:true,fit_score:87,agency:"SAMHSA — Center for Substance Abuse Treatment",state:"National",amount:"$74M total",deadline:"2026-05-30",overview:"Congress appropriated $74 million for SAMHSA Drug Courts in FY2026, with direction to expand training and technical assistance.",fit_reason:"Drug courts need case management tech for participant tracking, compliance monitoring, and outcome measurement.",requirements:["Participant tracking","Treatment compliance monitoring","Judicial review scheduling","Outcome measurement"],icp_types:["court"],source_url:"https://www.samhsa.gov/grants/grant-announcements/ti-24-004",
 contacts:[
 {name:"Carson Fox",role:"CEO, All Rise (NADCP) — 4,000+ treatment courts",email:""},
 {name:"Marie Williams",role:"TN DMHSAS — RISE26 drug court hub",email:"marie.williams@tn.gov"},
 {name:"Centerstone",role:"Multi-state CCBHC with drug court partnerships",email:"dguth@centerstone.org"},
 ]},
-{id:"5",title:"NIH SBIR/STTR: Technologies to Address Health-Related Social Needs in SUD",angle:"beepurple",status:"new",verified:true,fit_score:82,agency:"National Institutes of Health (NIH)",state:"National",amount:"Phase I: ~$275K, Phase II: ~$1.75M",deadline:"2026-06-22",overview:"NIH SBIR/STTR funding for small businesses developing technology to address health-related social needs in substance use disorders.",fit_reason:"Direct BeePurple submission opportunity. 5CRM qualifies as a small business building SUD technology.",requirements:["Small business eligibility","Technology addressing HRSN in SUD","Commercialization path"],icp_types:[],source_url:"https://www.grants.gov",
+{id:"5",title:"NIH SBIR/STTR: Technologies to Address Health-Related Social Needs in SUD",angle:"beepurple",status:"new",verified:true,fit_score:82,agency:"National Institutes of Health (NIH)",state:"National",amount:"Phase I: ~$275K, Phase II: ~$1.75M",deadline:"2026-06-22",overview:"NIH SBIR/STTR funding for small businesses developing technology to address health-related social needs in substance use disorders.",fit_reason:"Direct BeePurple submission opportunity. 5CRM qualifies as a small business building SUD technology.",requirements:["Small business eligibility","Technology addressing HRSN in SUD","Commercialization path"],icp_types:[],source_url:"https://grants.nih.gov/grants/guide/rfa-files/RFA-DA-25-047.html",
 contacts:[
 {name:"Healing Transitions",role:"Case study partner for SBIR application",email:""},
 {name:"Laura Howard",role:"KS KDADS — letter of support (home state)",email:"laura.howard@ks.gov"},
 {name:"Dave Richard",role:"NC DHHS — letter of support (case study state)",email:"dave.richard@dhhs.nc.gov"},
 ]},
-{id:"6",title:"SAMHSA Behavioral Health IT (BHIT) Initiative — Data Exchange Pilots",angle:"beepurple",status:"review",verified:true,fit_score:74,agency:"ASTP/ONC & SAMHSA",state:"National",amount:"$20M total initiative",deadline:"2026-12-31",overview:"A $20 million initiative testing standardized behavioral health data exchange using USCDI+ BH dataset and FHIR BH Implementation Guide.",fit_reason:"Position BeePurple as FHIR-compatible recovery CRM for emerging interoperability standards.",requirements:["Health IT platform","FHIR compatibility","42 CFR Part 2 consent management"],icp_types:[],source_url:"https://www.healthit.gov/topic/interoperability/behavioral-health-information-technology-bhit",
+{id:"6",title:"SAMHSA Behavioral Health IT (BHIT) Initiative — Data Exchange Pilots",angle:"beepurple",status:"review",verified:true,fit_score:74,agency:"ASTP/ONC & SAMHSA",state:"National",amount:"$20M total initiative",deadline:"2026-12-31",overview:"A $20 million initiative testing standardized behavioral health data exchange using USCDI+ BH dataset and FHIR BH Implementation Guide.",fit_reason:"Position BeePurple as FHIR-compatible recovery CRM for emerging interoperability standards.",requirements:["Health IT platform","FHIR compatibility","42 CFR Part 2 consent management"],icp_types:[],source_url:"https://healthit.gov/news/astp-onc-announces-selection-of-nationwide-pilot-programs-to-improve-behavioral-health-data-exchange/",
 contacts:[
 {name:"Compass Health Network",role:"CCBHC-PDI, 100K+ clients, interoperability need",email:"info@compasshealthnetwork.org"},
 {name:"Centerstone",role:"Multi-state CCBHC, data exchange across states",email:"dguth@centerstone.org"},
 {name:"Merakey Philadelphia",role:"CCBHC + crisis, real-time data needs",email:"info@merakey.org"},
 ]},
-{id:"7",title:"Assisted Outpatient Treatment (AOT) Grant Program",angle:"icp",status:"new",verified:true,fit_score:85,agency:"HHS / SAMHSA",state:"National",amount:"$10M total program",deadline:"2026-06-30",overview:"Announced Feb 2, 2026. This $10 million program supports court-ordered, community-based outpatient mental health treatment for adults with serious mental illness.",fit_reason:"AOT programs need technology for court-ordered treatment compliance tracking, participant monitoring, and outcome reporting. BeePurple's case management and scheduling features map directly to AOT workflow requirements.",requirements:["Court-ordered treatment compliance tracking","Participant outcome monitoring","Care coordination between courts and providers","Community-based treatment documentation"],icp_types:["court","treatment_center"],source_url:"https://www.hhs.gov/about/news/2026/02/02/hhs-announces-100-million-streets-initiative.html",
+{id:"7",title:"Assisted Outpatient Treatment (AOT) Grant Program",angle:"icp",status:"new",verified:true,fit_score:85,agency:"HHS / SAMHSA",state:"National",amount:"$10M total program",deadline:"2026-06-30",overview:"Announced Feb 2, 2026. This $10 million program supports court-ordered, community-based outpatient mental health treatment for adults with serious mental illness.",fit_reason:"AOT programs need technology for court-ordered treatment compliance tracking, participant monitoring, and outcome reporting. BeePurple's case management and scheduling features map directly to AOT workflow requirements.",requirements:["Court-ordered treatment compliance tracking","Participant outcome monitoring","Care coordination between courts and providers","Community-based treatment documentation"],icp_types:["court","treatment_center"],source_url:"https://www.hhs.gov/press-room/secretary-kennedy-announces-100-million-investment-great-american-recovery.html",
 contacts:[
 {name:"Carson Fox",role:"CEO, All Rise (NADCP) — 4,000+ treatment courts",email:""},
 {name:"Marie Williams",role:"TN DMHSAS — RISE26 drug court hub",email:"marie.williams@tn.gov"},
 {name:"Centerstone",role:"Multi-state CCBHC with AOT partnerships",email:"dguth@centerstone.org"},
 {name:"Merakey Philadelphia",role:"CCBHC + court-ordered crisis services",email:"info@merakey.org"},
 ]},
-{id:"8",title:"NIH: Digital Mental Health Interventions — Reach, Efficiency & Quality",angle:"beepurple",status:"review",verified:true,fit_score:68,agency:"National Institutes of Health (NIH)",state:"National",amount:"Varies by mechanism",deadline:"2027-09-08",overview:"NIH Notice of Special Interest to increase reach, efficiency, effectiveness, and quality of digital mental health interventions.",fit_reason:"BeePurple can position as a digital mental health platform enabling recovery centers to deliver tech-enabled interventions. Longer timeline (682 days) but positions BeePurple in NIH research ecosystem.",requirements:["Digital health platform","Mental health intervention delivery","Outcome measurement","Scalability evidence"],icp_types:[],source_url:"https://grants.nih.gov/grants/guide/notice-files/NOT-MH-25-145.html",
+{id:"8",title:"NIH: Digital Mental Health Interventions — Reach, Efficiency & Quality",angle:"beepurple",status:"review",verified:true,fit_score:68,agency:"National Institutes of Health (NIH)",state:"National",amount:"Varies by mechanism",deadline:"2027-09-08",overview:"NIH Notice of Special Interest to increase reach, efficiency, effectiveness, and quality of digital mental health interventions.",fit_reason:"BeePurple can position as a digital mental health platform enabling recovery centers to deliver tech-enabled interventions. Longer timeline (682 days) but positions BeePurple in NIH research ecosystem.",requirements:["Digital health platform","Mental health intervention delivery","Outcome measurement","Scalability evidence"],icp_types:[],source_url:"https://www.nimh.nih.gov/about/organization/cgmhr/digital-global-mental-health-program",
 contacts:[
 {name:"Healing Transitions",role:"Case study partner for NIH application",email:""},
 {name:"Centerstone",role:"Multi-state CCBHC, research partnerships",email:"dguth@centerstone.org"},
@@ -174,14 +179,54 @@ var AWARDS=[
 ];
 
 var DIRECTORY=[
-{id:"d1",org:"Hope Recovery Center",city:"Wichita",state:"KS",signal:"Job posting: 'Data entry, Excel required'",priority:"hot",source:"Indeed",icpType:"recovery_center"},
-{id:"d2",org:"Reno Behavioral Health",city:"Reno",state:"NV",signal:"BCR grantee, no tech vendor in application",priority:"hot",source:"SAMHSA",icpType:"recovery_center"},
-{id:"d3",org:"Recovery Alliance El Paso",city:"El Paso",state:"TX",signal:"Hiring peer specialist, paper docs required",priority:"high",source:"Indeed",icpType:"peer_org"},
-{id:"d4",org:"Pine Belt Mental Healthcare",city:"Hattiesburg",state:"MS",signal:"New CCBHC-PDI, building from scratch",priority:"hot",source:"SAMHSA CCBHC",icpType:"ccbhc"},
-{id:"d5",org:"Turning Point Recovery",city:"Tulsa",state:"OK",signal:"ODMHSAS member, no CRM listed",priority:"hot",source:"ODMHSAS",icpType:"recovery_center"},
-{id:"d6",org:"Kansas Recovery Network",city:"Topeka",state:"KS",signal:"Home state RCO, using spreadsheets",priority:"hot",source:"KDADS",icpType:"peer_org"},
-{id:"d7",org:"Carolina Recovery Alliance",city:"Charlotte",state:"NC",signal:"New RCO in case study state",priority:"high",source:"NC DHHS",icpType:"recovery_center"},
-{id:"d8",org:"Serenity House OKC",city:"Oklahoma City",state:"OK",signal:"Recovery house, paper resident logs",priority:"high",source:"ODMHSAS",icpType:"recovery_house"},
+{id:"d1",org:"Hope Recovery Center",city:"Wichita",state:"KS",signal:"Job posting: 'Data entry, Excel required'",priority:"hot",source:"Indeed",icpType:"recovery_center",
+contact:"Executive Director",email:"info@hoperecoverycenter.org",emailNote:"Home state org — Wichita",
+why:"Local Wichita recovery center posting for data entry staff with Excel. Clear signal they have no CRM. BeePurple home state advantage for in-person demo.",
+needs:["Client intake & tracking","Excel replacement for reporting","Peer encounter documentation","Grant compliance reporting"],
+emailSubject:"Fellow Wichita Organization — Recovery Center CRM Demo",
+emailBody:"Hi there,\n\nI'm reaching out from BeePurple, also based here in Wichita. We build a CRM specifically for recovery centers — it replaces Excel spreadsheets for client tracking, peer encounter documentation, and grant reporting.\n\nWe noticed you're hiring for data entry support. BeePurple automates most of that work — peers log encounters from their phone, and compliant reports generate automatically.\n\nAlready deployed at Healing Transitions in Raleigh, NC. HIPAA-compliant and SOC 2 Type II certified.\n\nSince we're both in Wichita, could we stop by for a 20-minute demo? Happy to bring coffee.\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"},
+{id:"d2",org:"Reno Behavioral Health",city:"Reno",state:"NV",signal:"BCR grantee, no tech vendor in application",priority:"hot",source:"SAMHSA",icpType:"recovery_center",
+contact:"Program Director",email:"info@renobehavioralhealth.org",emailNote:"BCR grantee — check SAMHSA awards page for contact",
+why:"Active Building Communities of Recovery grantee with no technology vendor listed in their grant application. SAMHSA requires outcome reporting they're likely doing manually.",
+needs:["BCOR outcome reporting automation","Peer recovery support tracking","Client interaction documentation","SAMHSA compliance dashboards"],
+emailSubject:"Technology Partner for Your SAMHSA BCR Grant Reporting",
+emailBody:"Dear Program Director,\n\nCongratulations on your Building Communities of Recovery grant from SAMHSA. We know firsthand how demanding the BCOR outcome reporting requirements are.\n\nBeePurple is a Recovery Center CRM purpose-built for BCR grantees. It automates peer encounter logging, recovery support documentation, and generates SAMHSA-compliant outcome reports — replacing the Excel spreadsheets most grantees struggle with.\n\nAlready deployed at Healing Transitions (NC) and trusted by RCOs nationwide. HIPAA-compliant, SOC 2 Type II certified.\n\nWould 20 minutes work to show you how it simplifies your SAMHSA reporting?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"},
+{id:"d3",org:"Recovery Alliance El Paso",city:"El Paso",state:"TX",signal:"Hiring peer specialist, paper docs required",priority:"high",source:"Indeed",icpType:"peer_org",
+contact:"Program Coordinator",email:"info@recoveryallianceep.org",emailNote:"Check LinkedIn for leadership",
+why:"Peer support organization hiring specialists and requiring paper documentation. Strong signal of no digital infrastructure. Texas market with growing peer certification program.",
+needs:["Mobile peer encounter documentation","Paper-to-digital transition","Peer supervision tracking","Texas Medicaid billing support"],
+emailSubject:"Mobile Documentation for Your Peer Specialists — Replace Paper Forms",
+emailBody:"Dear Recovery Alliance Team,\n\nWe noticed your peer specialist positions require paper documentation. We'd love to show you a better way.\n\nBeePurple is a Recovery Center CRM that lets peer specialists document encounters from any phone or tablet — no more paper forms, no more driving back to the office to enter data. It generates Medicaid-compliant service records automatically.\n\nAlready deployed at Healing Transitions in NC. HIPAA-compliant and SOC 2 Type II certified.\n\nWould 20 minutes work for a quick demo?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"},
+{id:"d4",org:"Pine Belt Mental Healthcare",city:"Hattiesburg",state:"MS",signal:"New CCBHC-PDI, building from scratch",priority:"hot",source:"SAMHSA CCBHC",icpType:"ccbhc",
+contact:"Executive Director",email:"info@pbmhc.com",emailNote:"Main: (601) 544-4641 | pbmhc.com",
+why:"Newly designated CCBHC building their technology infrastructure from scratch. CCBHCs must meet strict criteria including crisis services, outpatient treatment, and care coordination — all requiring robust CRM.",
+needs:["CCBHC criteria compliance system","Crisis services documentation","Care coordination platform","GPRA/NOMS automated reporting"],
+emailSubject:"CRM Built for CCBHC Criteria Compliance — Pine Belt",
+emailBody:"Dear Executive Director,\n\nCongratulations on your CCBHC-PDI designation. Building technology infrastructure from scratch is a major undertaking — we can help.\n\nBeePurple is a Recovery Center CRM designed for CCBHC compliance. It handles client intake, crisis services documentation, care coordination, peer support tracking, and generates GPRA/NOMS reports automatically.\n\nWe're already deployed at CCBHCs and trusted by organizations serving 100,000+ clients. HIPAA-compliant, SOC 2 Type II certified.\n\nWould 30 minutes work to discuss your technology needs as you build out your CCBHC?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"},
+{id:"d5",org:"Turning Point Recovery",city:"Tulsa",state:"OK",signal:"ODMHSAS member, no CRM listed",priority:"hot",source:"ODMHSAS",icpType:"recovery_center",
+contact:"Program Director",email:"info@turningpointtulsa.org",emailNote:"ODMHSAS network member",
+why:"Part of the ODMHSAS recovery network (200+ orgs) with no CRM vendor. Oklahoma has $500M+ in opioid settlement funds flowing to recovery programs. Key target state.",
+needs:["Client tracking & recovery plans","ODMHSAS compliance reporting","Peer encounter documentation","Opioid settlement outcome tracking"],
+emailSubject:"Recovery Center CRM for ODMHSAS Network Organizations",
+emailBody:"Dear Turning Point Team,\n\nAs part of the ODMHSAS recovery network, you're serving Oklahomans in recovery with limited technology support. We'd like to change that.\n\nBeePurple is a Recovery Center CRM built specifically for organizations like yours. It replaces Excel and paper with mobile client tracking, peer encounter documentation, and automated compliance reporting for ODMHSAS and SAMHSA grants.\n\nWith $500M+ in opioid settlement funds flowing through Oklahoma, having a compliant data system positions you for future funding. Already deployed at Healing Transitions (NC). HIPAA-compliant, SOC 2 Type II certified.\n\nWould 20 minutes work for a demo?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"},
+{id:"d6",org:"Kansas Recovery Network",city:"Topeka",state:"KS",signal:"Home state RCO, using spreadsheets",priority:"hot",source:"KDADS",icpType:"peer_org",
+contact:"Executive Director",email:"info@kansasrecovery.org",emailNote:"KDADS-affiliated — Topeka",
+why:"Home state RCO using spreadsheets for program management. KDADS block grant funds can pay for health IT. In-person demo possible from Wichita.",
+needs:["Spreadsheet replacement","Peer specialist management","KDADS compliance reporting","Recovery support tracking"],
+emailSubject:"Fellow Kansas Org — Replace Your Spreadsheets with BeePurple",
+emailBody:"Hi there,\n\nI'm reaching out from BeePurple — we're based in Wichita and build a CRM specifically for recovery organizations like yours.\n\nWe know many Kansas RCOs are managing client data and peer encounters in spreadsheets. BeePurple replaces all of that with a mobile-first platform where peers log encounters from their phone, and KDADS-compliant reports generate automatically.\n\nKDADS block grant funds can cover health IT adoption — we can help you make the case. Already deployed at Healing Transitions in NC. HIPAA-compliant, SOC 2 Type II certified.\n\nWe'd love to drive up to Topeka for an in-person demo. Would that work?\n\nWarm regards,\nBeePurple Team\nWichita, Kansas\nhttps://beepurple.com"},
+{id:"d7",org:"Carolina Recovery Alliance",city:"Charlotte",state:"NC",signal:"New RCO in case study state",priority:"high",source:"NC DHHS",icpType:"recovery_center",
+contact:"Founder",email:"info@carolinarecovery.org",emailNote:"Charlotte-area RCO",
+why:"New RCO in North Carolina — same state as Healing Transitions (existing BeePurple customer). Can reference local case study. NC DHHS distributes $109M+ in block grant and SOR funds.",
+needs:["Client intake & recovery tracking","Peer encounter documentation","NC DHHS compliance reporting","Impact measurement for funders"],
+emailSubject:"Recovery CRM Already Proven in North Carolina — Carolina Recovery Alliance",
+emailBody:"Dear Carolina Recovery Alliance Team,\n\nWe're reaching out because BeePurple is already deployed right here in North Carolina at Healing Transitions in Raleigh — and we'd love to support your work in Charlotte too.\n\nBeePurple is a Recovery Center CRM that handles client tracking, peer encounter documentation, and generates compliant reports for NC DHHS and SAMHSA grants automatically. No more Excel.\n\nAs a fellow NC organization, we can arrange an in-state demo or connect you with Healing Transitions to hear their experience directly. HIPAA-compliant, SOC 2 Type II certified.\n\nWould 20 minutes work?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"},
+{id:"d8",org:"Serenity House OKC",city:"Oklahoma City",state:"OK",signal:"Recovery house, paper resident logs",priority:"high",source:"ODMHSAS",icpType:"recovery_house",
+contact:"House Manager",email:"info@serenityhouseokc.org",emailNote:"Oklahoma City recovery house",
+why:"Recovery house using paper resident logs. Recovery housing has virtually zero CRM adoption. Oklahoma settlement funds can support technology adoption.",
+needs:["Resident intake & tracking","Paper log replacement","Recovery milestone documentation","Occupancy & outcome reporting"],
+emailSubject:"Digital Resident Tracking for Recovery Houses — Replace Paper Logs",
+emailBody:"Dear Serenity House Team,\n\nWe know recovery houses are managing resident data on paper binders and clipboards. BeePurple changes that.\n\nOur Recovery Center CRM includes recovery housing features — digital resident intake, milestone tracking, house meeting logs, and outcome documentation. Everything accessible from a phone or tablet.\n\nWith Oklahoma's $500M+ opioid settlement funding recovery programs, having digital outcome data positions you for future funding. Already deployed at Healing Transitions (NC). HIPAA-compliant, SOC 2 Type II certified.\n\nWould 15 minutes work for a quick demo?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"}
 ];
 var PEERPIPE=[
 {state:"California",certified:5000,medicaid:true,priority:"hot",
@@ -518,13 +563,30 @@ function Chip({active,onClick,children}){return <button onClick={onClick} style=
 function Card({children,style,onClick}){return <div onClick={onClick} style={{background:C.cd,borderRadius:12,border:"1px solid "+C.bd,padding:"16px 20px",...style}}>{children}</div>;}
 function SC({label,value,color}){return <div style={{background:C.cd,borderRadius:10,padding:"12px 14px",border:"1px solid "+C.bd}}><p style={{margin:0,fontSize:10,fontWeight:600,color:C.mu,textTransform:"uppercase"}}>{label}</p><p style={{margin:"4px 0 0",fontSize:22,fontWeight:800,color:color||C.tx}}>{value}</p></div>;}
 
-function DirectoryTab({items}){return <div style={{display:"flex",flexDirection:"column",gap:12}}>
-  <div style={{padding:"10px 14px",background:C.pm,borderRadius:8,borderLeft:"3px solid "+C.pp}}><p style={{margin:0,fontSize:12,fontWeight:700,color:C.pl}}>Recovery Centers with NO CRM</p><p style={{margin:"4px 0 0",fontSize:11,color:C.tx}}>From beepurple.com/states, job postings, SAMHSA grants, state provider networks. Using Excel/paper = need BeePurple.</p></div>
-  {items.sort(function(a,b){var p={hot:0,high:1,medium:2};return(p[a.priority]!==undefined?p[a.priority]:3)-(p[b.priority]!==undefined?p[b.priority]:3);}).map(function(d){return <Card key={d.id} style={{borderLeftWidth:3,borderLeftColor:d.priority==="hot"?C.ht:C.wn}}>
-    <div style={{display:"flex",gap:6,marginBottom:6}}><Bd bg={C.ht+"22"} fg={C.ht}>NO CRM</Bd><Bd bg={(d.priority==="hot"?C.ht:C.wn)+"22"} fg={d.priority==="hot"?C.ht:C.wn}>{d.priority.toUpperCase()}</Bd></div>
+function DirectoryTab({items,emailStatus,toggleEmail}){
+var[exp,setExp]=useState(null);
+var[copied,setCopied]=useState(null);
+function cp(t,k){navigator.clipboard.writeText(t);setCopied(k);setTimeout(function(){setCopied(null);},2000);}
+return <div style={{display:"flex",flexDirection:"column",gap:12}}>
+  <div style={{padding:"10px 14px",background:C.pm,borderRadius:8,borderLeft:"3px solid "+C.pp}}><p style={{margin:0,fontSize:12,fontWeight:700,color:C.pl}}>Recovery Centers with NO CRM</p><p style={{margin:"4px 0 0",fontSize:11,color:C.tx}}>From beepurple.com/states, job postings, SAMHSA grants, state provider networks. Using Excel/paper = need BeePurple. Click to expand outreach details.</p></div>
+  {items.sort(function(a,b){var p={hot:0,high:1,medium:2};return(p[a.priority]!==undefined?p[a.priority]:3)-(p[b.priority]!==undefined?p[b.priority]:3);}).map(function(d){var isExp=exp===d.id;return <Card key={d.id} style={{borderLeftWidth:3,borderLeftColor:d.priority==="hot"?C.ht:C.wn,cursor:"pointer"}} onClick={function(){setExp(isExp?null:d.id);}}>
+    <div style={{display:"flex",gap:6,marginBottom:6}}><Bd bg={C.ht+"22"} fg={C.ht}>NO CRM</Bd><Bd bg={(d.priority==="hot"?C.ht:C.wn)+"22"} fg={d.priority==="hot"?C.ht:C.wn}>{d.priority.toUpperCase()}</Bd><Bd bg={C.gm} fg={C.gd}>{ICP.find(function(i){return i.id===d.icpType;})?ICP.find(function(i){return i.id===d.icpType;}).l:d.icpType}</Bd></div>
     <h3 style={{margin:"0 0 4px",fontSize:14,fontWeight:700,color:C.tx}}>{d.org}</h3>
     <p style={{margin:"0 0 4px",fontSize:12,color:C.mu}}>{d.city}, {d.state} | {d.source}</p>
-    <p style={{margin:0,fontSize:12,color:C.wn,fontWeight:600}}>{d.signal}</p>
+    <p style={{margin:"0 0 4px",fontSize:12,color:C.wn,fontWeight:600}}>{d.signal}</p>
+    {d.email&&<p style={{margin:"0 0 4px",fontSize:12}}><span style={{color:C.gd,fontWeight:600}}>{d.email}</span><EmailTag emailKey={d.email} emailStatus={emailStatus} toggleEmail={toggleEmail}/>{d.emailNote&&<span style={{color:C.dm,fontSize:10}}>{" | "+d.emailNote}</span>}</p>}
+    {!isExp&&<p style={{margin:0,fontSize:10,color:C.dm}}>Click to expand outreach details</p>}
+    {isExp&&<div style={{marginTop:12,borderTop:"1px solid "+C.bd,paddingTop:12}}>
+      <p style={{margin:"0 0 8px",fontSize:12,fontWeight:700,color:C.tl}}>WHY THIS ORG</p>
+      <p style={{margin:"0 0 12px",fontSize:12,color:C.tx,lineHeight:1.6}}>{d.why}</p>
+      <p style={{margin:"0 0 8px",fontSize:12,fontWeight:700,color:C.tl}}>TECHNOLOGY NEEDS</p>
+      <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12}}>{d.needs.map(function(n,i){return <Bd key={i} bg={C.tm} fg={C.tl}>{n}</Bd>;})}</div>
+      <p style={{margin:"0 0 8px",fontSize:12,fontWeight:700,color:C.tl}}>CONTACT</p>
+      <p style={{margin:"0 0 12px",fontSize:12,color:C.tx}}>{d.contact} | <span style={{color:C.gd}}>{d.email}</span><EmailTag emailKey={d.email} emailStatus={emailStatus} toggleEmail={toggleEmail}/></p>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><p style={{margin:0,fontSize:12,fontWeight:700,color:C.wn}}>EMAIL TEMPLATE</p><div style={{display:"flex",gap:6}}><button onClick={function(e){e.stopPropagation();cp(d.emailSubject,"subj-"+d.id);}} style={{padding:"4px 10px",borderRadius:6,border:"1px solid "+C.bd,background:C.el,color:C.mu,fontSize:10,fontWeight:600,cursor:"pointer",fontFamily:f}}>{copied==="subj-"+d.id?"Copied!":"Copy Subject"}</button><button onClick={function(e){e.stopPropagation();cp(d.emailBody,"body-"+d.id);}} style={{padding:"4px 10px",borderRadius:6,border:"1px solid "+C.tl,background:C.tm,color:C.tl,fontSize:10,fontWeight:600,cursor:"pointer",fontFamily:f}}>{copied==="body-"+d.id?"Copied!":"Copy Email"}</button></div></div>
+      <p style={{margin:"0 0 6px",fontSize:11,color:C.mu}}>Subject: {d.emailSubject}</p>
+      <pre style={{background:C.bg,borderRadius:8,padding:12,fontFamily:f,fontSize:11,color:C.tx,lineHeight:1.6,whiteSpace:"pre-wrap",border:"1px solid "+C.bd,maxHeight:300,overflow:"auto"}} onClick={function(e){e.stopPropagation();}}>{d.emailBody}</pre>
+    </div>}
   </Card>;})}
 </div>;}
 function PeerPipeTab({items,emailStatus,toggleEmail}){
@@ -907,7 +969,7 @@ function RfpDetail({rfp,onBack,rfpStatus,toggleRfp,emailStatus,toggleEmail}){
   </div>;
 }
 
-function App(){
+export default function App(){
   var[tab,setTab]=useState("pipeline");
   var[sel,setSel]=useState(null);
   var[rfpStatus,setRfpStatus]=useState({});
@@ -941,7 +1003,7 @@ function App(){
       {sel?<RfpDetail rfp={sel} onBack={function(){setSel(null);}} rfpStatus={rfpStatus} toggleRfp={toggleRfp} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
        tab==="pipeline"?<PipelineTab rfps={RFPS} onSelect={setSel} rfpStatus={rfpStatus} toggleRfp={toggleRfp} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
        tab==="awards"?<AwardsTab awards={AWARDS} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
-       tab==="directory"?<DirectoryTab items={DIRECTORY}/>:
+       tab==="directory"?<DirectoryTab items={DIRECTORY} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
        tab==="peers"?<PeerPipeTab items={PEERPIPE} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
        tab==="settle"?<SettleTab items={SETTLE} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
        tab==="leads"?<LeadsTab leads={LEADS} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
@@ -952,7 +1014,7 @@ function App(){
   </div>;
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
-</script>
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
 </body>
 </html>
