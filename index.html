@@ -698,26 +698,17 @@ function PipelineTab({rfps,onSelect,rfpStatus,toggleRfp,emailStatus,toggleEmail}
   </div>;
 }
 
-function LeadsTab({leads,settlements,emailStatus,toggleEmail}){
+function LeadsTab({leads,emailStatus,toggleEmail}){
   var[tf,setTf]=useState("all");
-  var types={settlement:{i:"$",c:C.gd},job_signal:{i:"J",c:C.wn},award:{i:"A",c:C.ok},new_org:{i:"N",c:C.tl},competitor:{i:"C",c:C.pl},awardee:{i:"$",c:C.ok}};
-  var settleLeads=settlements.map(function(s){return{id:"stl-"+s.state,type:"settlement",title:s.state+" Opioid Settlement ("+s.funds+")",org:s.dm,state:s.state,signal:s.note+" | Status: "+s.status+" | Tech spending: "+s.tech,priority:s.priority,email:s.contact.includes("@")?s.contact:null,funds:s.funds,techStatus:s.tech,settleStatus:s.status};});
-  var combined=leads.filter(function(l){return l.type!=="contact";}).concat(settleLeads);
-  var filtered=combined.filter(function(l){return tf==="all"||l.type===tf;}).sort(function(a,b){var p={hot:0,high:1,medium:2};return(p[a.priority]!==undefined?p[a.priority]:3)-(p[b.priority]!==undefined?p[b.priority]:3);});
-  var settleCount=settleLeads.length;
-  var totalFunds=settlements.reduce(function(s,v){var n=v.funds.replace(/[^0-9.]/g,"");return s+parseFloat(n||0);},0);
+  var types={settlement:{i:"S",c:C.gd},job_signal:{i:"J",c:C.wn},award:{i:"A",c:C.ok},new_org:{i:"N",c:C.tl},competitor:{i:"C",c:C.pl},awardee:{i:"$",c:C.ok}};
+  var filtered=leads.filter(function(l){return l.type!=="contact"&&(tf==="all"||l.type===tf);}).sort(function(a,b){var p={hot:0,high:1,medium:2};return(p[a.priority]!==undefined?p[a.priority]:3)-(p[b.priority]!==undefined?p[b.priority]:3);});
   return <div style={{display:"flex",flexDirection:"column",gap:12}}>
-    {(tf==="all"||tf==="settlement")?<div style={{padding:"10px 14px",background:C.gm,borderRadius:8,borderLeft:"3px solid "+C.gd}}><p style={{margin:0,fontSize:12,fontWeight:700,color:C.gd}}>$50B+ Opioid Settlement Funds Deploying NOW</p><p style={{margin:"4px 0 0",fontSize:11,color:C.tx}}>Tracking {settleCount} states earmarking for recovery tech. Position BeePurple before allocations finalize.</p></div>:null}
-    <div style={{display:"flex",gap:6,flexWrap:"wrap"}}><Chip active={tf==="all"} onClick={function(){setTf("all");}}>All ({combined.length})</Chip><Chip active={tf==="settlement"} onClick={function(){setTf("settlement");}}>Settlements ({settleCount})</Chip><Chip active={tf==="awardee"} onClick={function(){setTf("awardee");}}>Awardees</Chip><Chip active={tf==="job_signal"} onClick={function(){setTf("job_signal");}}>Excel Signals</Chip><Chip active={tf==="award"} onClick={function(){setTf("award");}}>Awards</Chip><Chip active={tf==="competitor"} onClick={function(){setTf("competitor");}}>Competitors</Chip><Chip active={tf==="new_org"} onClick={function(){setTf("new_org");}}>New Orgs</Chip></div>
-    {filtered.map(function(l){var t=types[l.type]||{i:"?",c:C.mu};var pc={hot:C.ht,high:C.wn,medium:C.tl};var isSettle=l.id&&l.id.indexOf("stl-")===0;return <Card key={l.id} style={{borderLeftWidth:3,borderLeftColor:pc[l.priority]||C.bd}}>
-      <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:6,marginBottom:8}}>
-        <div style={{display:"flex",gap:6}}><Bd bg={t.c+"22"} fg={t.c}>{l.type.replace("_"," ").toUpperCase()}</Bd><Bd bg={(pc[l.priority]||C.mu)+"22"} fg={pc[l.priority]||C.mu}>{l.priority.toUpperCase()}</Bd>{isSettle&&l.techStatus&&<Bd bg={l.techStatus==="Yes"?"rgba(92,192,126,0.15)":C.gm} fg={l.techStatus==="Yes"?C.ok:C.gd}>TECH: {l.techStatus}</Bd>}</div>
-        {isSettle&&l.funds&&<span style={{fontSize:16,fontWeight:800,color:C.ok}}>{l.funds}</span>}
-      </div>
+    <div style={{display:"flex",gap:6,flexWrap:"wrap"}}><Chip active={tf==="all"} onClick={function(){setTf("all");}}>All</Chip><Chip active={tf==="awardee"} onClick={function(){setTf("awardee");}}>Awardees</Chip><Chip active={tf==="settlement"} onClick={function(){setTf("settlement");}}>Settlements</Chip><Chip active={tf==="job_signal"} onClick={function(){setTf("job_signal");}}>Excel Signals</Chip><Chip active={tf==="award"} onClick={function(){setTf("award");}}>Awards</Chip><Chip active={tf==="competitor"} onClick={function(){setTf("competitor");}}>Competitors</Chip><Chip active={tf==="new_org"} onClick={function(){setTf("new_org");}}>New Orgs</Chip></div>
+    {filtered.map(function(l){var t=types[l.type]||{i:"?",c:C.mu};var pc={hot:C.ht,high:C.wn,medium:C.tl};return <Card key={l.id} style={{borderLeftWidth:3,borderLeftColor:pc[l.priority]||C.bd}}>
+      <div style={{display:"flex",gap:6,marginBottom:8}}><Bd bg={t.c+"22"} fg={t.c}>{l.type.replace("_"," ").toUpperCase()}</Bd><Bd bg={(pc[l.priority]||C.mu)+"22"} fg={pc[l.priority]||C.mu}>{l.priority.toUpperCase()}</Bd></div>
       <h3 style={{margin:"0 0 4px",fontSize:14,fontWeight:700,color:C.tx}}>{l.title}</h3>
-      {l.org&&l.org!=="Multiple"&&<p style={{margin:"0 0 4px",fontSize:12,color:C.mu}}>{l.org}{l.state?" — "+l.state:""}</p>}
+      {l.org!=="Multiple"&&<p style={{margin:"0 0 4px",fontSize:12,color:C.mu}}>{l.org}{l.state?" - "+l.state:""}</p>}
       <p style={{margin:"0 0 6px",fontSize:12,color:C.tx,lineHeight:1.5}}>{l.signal}</p>
-      {l.email&&<p style={{margin:"0 0 4px",fontSize:12}}><span style={{color:C.gd,fontWeight:600}}>{l.email}</span><EmailTag emailKey={l.email} emailStatus={emailStatus} toggleEmail={toggleEmail}/></p>}
       {l.url&&<a href={l.url} target="_blank" rel="noreferrer" style={{fontSize:12,color:C.tl}}>View Source</a>}
     </Card>;})}
   </div>;
@@ -978,7 +969,7 @@ function RfpDetail({rfp,onBack,rfpStatus,toggleRfp,emailStatus,toggleEmail}){
   </div>;
 }
 
-export default function App(){
+function App(){
   var[tab,setTab]=useState("pipeline");
   var[sel,setSel]=useState(null);
   var[rfpStatus,setRfpStatus]=useState({});
@@ -986,7 +977,7 @@ export default function App(){
   function toggleRfp(id,val){setRfpStatus(function(prev){var n=Object.assign({},prev);n[id]=prev[id]===val?null:val;return n;});}
   function toggleEmail(key,val){setEmailStatus(function(prev){var n=Object.assign({},prev);n[key]=prev[key]===val?null:val;return n;});}
   var st={rfps:RFPS.length,bp:RFPS.filter(function(r){return r.angle==="beepurple";}).length,icp:RFPS.filter(function(r){return r.angle==="icp";}).length,leads:LEADS.length,hot:LEADS.filter(function(l){return l.priority==="hot";}).length,contacts:LEADS.filter(function(l){return l.type==="contact";}).length,events:EVENTS.length,awards:AWARDS.length,awardsHot:AWARDS.filter(function(a){return a.fit==="hot";}).length};
-  var tabs=[{id:"pipeline",l:"RFPs",n:st.rfps},{id:"awards",l:"Awards",n:st.awards},{id:"directory",l:"No CRM",n:DIRECTORY.length},{id:"peers",l:"Peer Pipeline",n:PEERPIPE.length},{id:"leads",l:"Leads",n:st.leads-st.contacts+SETTLE.length},{id:"contacts",l:"Contacts",n:st.contacts},{id:"events",l:"Events",n:st.events}];
+  var tabs=[{id:"pipeline",l:"RFPs",n:st.rfps},{id:"awards",l:"Awards",n:st.awards},{id:"directory",l:"No CRM",n:DIRECTORY.length},{id:"peers",l:"Peer Pipeline",n:PEERPIPE.length},{id:"leads",l:"Leads",n:st.leads-st.contacts},{id:"contacts",l:"Contacts",n:st.contacts},{id:"events",l:"Events",n:st.events}];
 
   return <div style={{minHeight:"100vh",background:C.bg,color:C.tx,fontFamily:f}}>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -1014,7 +1005,7 @@ export default function App(){
        tab==="awards"?<AwardsTab awards={AWARDS} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
        tab==="directory"?<DirectoryTab items={DIRECTORY} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
        tab==="peers"?<PeerPipeTab items={PEERPIPE} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
-       tab==="leads"?<LeadsTab leads={LEADS} settlements={SETTLE} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
+       tab==="leads"?<LeadsTab leads={LEADS} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
        tab==="contacts"?<ContactsTab leads={LEADS} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
        tab==="events"?<EventsTab events={EVENTS}/>:null}
     </main>
