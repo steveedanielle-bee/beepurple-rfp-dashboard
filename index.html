@@ -1,24 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BeePurple RFP Pipeline</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐝</text></svg>">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0F0E13; }
-  </style>
-</head>
-<body>
-  <div id="root"></div>
-  <script type="text/babel">
-    const { useState, useMemo, useCallback } = React;
-
+import { useState, useMemo } from "react";
 
 const C={bg:"#0F0E13",sf:"#18171E",cd:"#1E1D26",el:"#252430",bd:"#2E2D3A",gd:"#D4A853",gl:"#E8C878",gm:"rgba(212,168,83,0.15)",pp:"#9B6BC2",pl:"#B88EDB",pm:"rgba(155,107,194,0.12)",tl:"#4DB8A8",tm:"rgba(77,184,168,0.1)",tx:"#E8E6EF",mu:"#8B8799",dm:"#5C5870",ok:"#5CC07E",wn:"#E8A94D",bd2:"#D47272",ht:"#FF4444",wh:"#fff"};
 const f="'DM Sans',sans-serif";
@@ -707,7 +687,7 @@ function LeadsTab({leads,settlements,emailStatus,toggleEmail}){
   var settleCount=settleLeads.length;
   var totalFunds=settlements.reduce(function(s,v){var n=v.funds.replace(/[^0-9.]/g,"");return s+parseFloat(n||0);},0);
   return <div style={{display:"flex",flexDirection:"column",gap:12}}>
-    {tf==="all"||tf==="settlement"?<div style={{padding:"10px 14px",background:C.gm,borderRadius:8,borderLeft:"3px solid "+C.gd}}><p style={{margin:0,fontSize:12,fontWeight:700,color:C.gd}}>$50B+ Opioid Settlement Funds Deploying NOW</p><p style={{margin:"4px 0 0",fontSize:11,color:C.tx}}>Tracking {settleCount} states earmarking for recovery tech. Position BeePurple before allocations finalize.</p></div>:null}
+    {(tf==="all"||tf==="settlement")?<div style={{padding:"10px 14px",background:C.gm,borderRadius:8,borderLeft:"3px solid "+C.gd}}><p style={{margin:0,fontSize:12,fontWeight:700,color:C.gd}}>$50B+ Opioid Settlement Funds Deploying NOW</p><p style={{margin:"4px 0 0",fontSize:11,color:C.tx}}>Tracking {settleCount} states earmarking for recovery tech. Position BeePurple before allocations finalize.</p></div>:null}
     <div style={{display:"flex",gap:6,flexWrap:"wrap"}}><Chip active={tf==="all"} onClick={function(){setTf("all");}}>All ({combined.length})</Chip><Chip active={tf==="settlement"} onClick={function(){setTf("settlement");}}>Settlements ({settleCount})</Chip><Chip active={tf==="awardee"} onClick={function(){setTf("awardee");}}>Awardees</Chip><Chip active={tf==="job_signal"} onClick={function(){setTf("job_signal");}}>Excel Signals</Chip><Chip active={tf==="award"} onClick={function(){setTf("award");}}>Awards</Chip><Chip active={tf==="competitor"} onClick={function(){setTf("competitor");}}>Competitors</Chip><Chip active={tf==="new_org"} onClick={function(){setTf("new_org");}}>New Orgs</Chip></div>
     {filtered.map(function(l){var t=types[l.type]||{i:"?",c:C.mu};var pc={hot:C.ht,high:C.wn,medium:C.tl};var isSettle=l.id&&l.id.indexOf("stl-")===0;return <Card key={l.id} style={{borderLeftWidth:3,borderLeftColor:pc[l.priority]||C.bd}}>
       <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:6,marginBottom:8}}>
@@ -1021,8 +1001,3 @@ export default function App(){
     <footer style={{borderTop:"1px solid "+C.bd,padding:"12px 20px",textAlign:"center"}}><p style={{margin:0,fontSize:11,color:C.dm}}>BeePurple Sales Pipeline</p></footer>
   </div>;
 }
-
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-  </script>
-</body>
-</html>
