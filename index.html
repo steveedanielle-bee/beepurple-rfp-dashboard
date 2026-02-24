@@ -1,264 +1,958 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BeePurple Sales Pipeline</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐝</text></svg>">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0F0E13; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BeePurple Sales Pipeline</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'DM Sans',sans-serif;background:#0F0E13;}</style>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="text/babel">
-    const { useState, useMemo, useCallback, useEffect } = React;
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useMemo } = React;
 
+const C={bg:"#0F0E13",sf:"#18171E",cd:"#1E1D26",el:"#252430",bd:"#2E2D3A",gd:"#D4A853",gl:"#E8C878",gm:"rgba(212,168,83,0.15)",pp:"#9B6BC2",pl:"#B88EDB",pm:"rgba(155,107,194,0.12)",tl:"#4DB8A8",tm:"rgba(77,184,168,0.1)",tx:"#E8E6EF",mu:"#8B8799",dm:"#5C5870",ok:"#5CC07E",wn:"#E8A94D",bd2:"#D47272",ht:"#FF4444",wh:"#fff"};
+const f="'DM Sans',sans-serif";
+const ICP=[{id:"state_doh",l:"State DoH"},{id:"recovery_center",l:"Recovery Centers"},{id:"treatment_center",l:"Treatment Centers"},{id:"court",l:"Drug Courts"},{id:"recovery_house",l:"Recovery Houses"},{id:"ccbhc",l:"CCBHCs"},{id:"peer_org",l:"Peer Support Orgs"}];
 
-const API = "https://beepurple-rfp-monitor-production.up.railway.app";
-const BP = {
-  name: "BeePurple", tagline: "Recovery Center CRM", url: "https://beepurple.com",
-  features: ["HIPAA-compliant Recovery Center CRM","Recovery journey tracking","Demographic profiles & documentation","Data insights & impact reporting","Custom fields, forms & workflows","KitKeeper (Naloxone/NRT tracking)","Recovery Centers Directory (50 states)","SOC 2 Type II compliant"],
-  icpTypes: [
-    { id: "state_doh", label: "State DoH" },{ id: "recovery_center", label: "Recovery Centers" },
-    { id: "treatment_center", label: "Treatment Centers" },{ id: "court", label: "Drug/Treatment Courts" },
-    { id: "recovery_house", label: "Recovery Houses" },{ id: "ccbhc", label: "CCBHCs" },
-    { id: "peer_org", label: "Peer Support Orgs" },{ id: "sheriff", label: "Sheriff's Offices" },
-  ],
-};
-const C = { bg: "#0F0E13", surface: "#18171E", card: "#1E1D26", elevated: "#252430", border: "#2E2D3A", gold: "#D4A853", goldLight: "#E8C878", goldDim: "rgba(212,168,83,0.15)", purple: "#9B6BC2", purpleLight: "#B88EDB", purpleDim: "rgba(155,107,194,0.12)", teal: "#4DB8A8", tealDim: "rgba(77,184,168,0.1)", text: "#E8E6EF", textMuted: "#8B8799", textDim: "#5C5870", ok: "#5CC07E", warn: "#E8A94D", bad: "#D47272", hot: "#FF4444", white: "#fff" };
-const ff = "'DM Sans','Segoe UI',sans-serif";
-const mono = "'JetBrains Mono','SF Mono',monospace";
-const PRIO = { hot: { bg: "rgba(255,68,68,0.15)", fg: "#FF4444", icon: "🔥", l: "HOT" }, high: { bg: "rgba(232,169,77,0.15)", fg: "#E8A94D", icon: "⚡", l: "HIGH" }, medium: { bg: "rgba(77,184,168,0.15)", fg: "#4DB8A8", icon: "📋", l: "MED" }, low: { bg: "rgba(139,135,153,0.15)", fg: "#8B8799", icon: "📎", l: "LOW" } };
-const LTYPES = { job_signal: { icon: "📋", l: "Excel Signal", c: C.warn }, award: { icon: "💰", l: "Funded", c: C.ok }, settlement: { icon: "⚖️", l: "Settlement", c: C.gold }, competitor: { icon: "🔄", l: "Competitor", c: C.purpleLight }, new_org: { icon: "🌱", l: "New Org", c: C.teal }, contact: { icon: "👤", l: "Contact", c: C.goldLight } };
+const RFPS=[
+{id:"1",title:"STREETS Initiative — Safety Through Recovery, Engagement & Evidence-based Treatment and Supports",angle:"icp",status:"new",verified:true,fit_score:96,agency:"HHS / SAMHSA",state:"National (8 pilot localities)",amount:"$100M total ($12.5M avg per locality)",deadline:"2026-06-30",overview:"The STREETS Initiative is a $100 million centerpiece of the Trump administration's Great American Recovery effort, announced Feb 2, 2026 by HHS Secretary Kennedy. It funds targeted outreach, psychiatric care, medical stabilization, crisis intervention, and connections to stable housing for Americans experiencing homelessness and addiction.",fit_reason:"Major ICP opportunity. Pilot communities need technology to track recovery journeys, coordinate outreach teams, and report outcomes. BeePurple maps directly.",requirements:["Client tracking across crisis-treatment-housing continuum","Outcome measurement showing sustained recovery","Mobile-accessible for field outreach workers","Federal compliance reporting"],icp_types:["recovery_center","treatment_center","peer_org"],source_url:"https://www.hhs.gov/about/news/2026/02/02/hhs-announces-100-million-streets-initiative.html",
+contacts:[
+{name:"Merakey Philadelphia",role:"CCBHC + Kensington crisis — street outreach focus",email:"info@merakey.org"},
+{name:"Healing Transitions",role:"EXISTING CUSTOMER — Rapid Responder Program model",email:""},
+{name:"CCAR",role:"RCO with 43K+ outreach calls/yr",email:"training@ccar.us"},
+{name:"Young People in Recovery",role:"National RCO, 40+ state chapters",email:"info@youngpeopleinrecovery.org"},
+{name:"Faces & Voices of Recovery",role:"National advocacy RCO",email:"info@facesandvoicesofrecovery.org"},
+{name:"Centerstone",role:"Multi-state CCBHC, 180K+ clients",email:"dguth@centerstone.org"},
+]},
+{id:"2",title:"SAMHSA Building Communities of Recovery ($8.5M FY2026)",angle:"icp",status:"new",verified:true,fit_score:97,agency:"SAMHSA — Center for Substance Abuse Treatment",state:"National",amount:"$8.5M total",deadline:"2026-06-30",overview:"The Building Communities of Recovery program enables the development, expansion, and enhancement of recovery community organizations (RCOs).",fit_reason:"Directly targets BeePurple's core customer. RCOs receiving BCR grants need technology for client tracking and impact reporting.",requirements:["Peer recovery support services tracking","Client interaction documentation","Outcome measurement for SAMHSA compliance"],icp_types:["recovery_center","peer_org"],source_url:"https://www.samhsa.gov/grants/grants-dashboard",
+contacts:[
+{name:"CCAR",role:"Current BCR grantee, pioneer RCO",email:"training@ccar.us"},
+{name:"Young People in Recovery",role:"Current BCR grantee, 40+ chapters",email:"info@youngpeopleinrecovery.org"},
+{name:"Faces & Voices of Recovery",role:"Current BCR grantee, national",email:"info@facesandvoicesofrecovery.org"},
+{name:"ODMHSAS PRSS Team",role:"200+ OK recovery orgs could apply",email:"PRSSteam@odmhsas.org"},
+{name:"NC DHHS Peer Support",role:"NC RCOs can apply with case study",email:"DMHPeerSupport@dhhs.nc.gov"},
+]},
+{id:"3",title:"FY2026 SUPTRS/MHBG Block Grant — Health IT Adoption",angle:"icp",status:"review",verified:true,fit_score:92,agency:"SAMHSA — Block Grant Programs",state:"All 50 States + Territories",amount:"$475M SUBG + $319M MHBG = $794M total",deadline:"2026-10-01",overview:"SAMHSA distributed $794 million in block grant funding in February 2026. The application guide explicitly authorizes states to use block grant funds for health IT adoption.",fit_reason:"Every state receives these funds and the guide explicitly permits spending on health IT. Massive ICP opportunity at scale.",requirements:["HIPAA-compliant health IT platform","Client outcome tracking","Mobile accessibility"],icp_types:["state_doh","recovery_center","ccbhc"],source_url:"https://www.samhsa.gov/grants/block-grants",
+contacts:[
+{name:"Laura Howard",role:"KS KDADS Secretary — HOME STATE block grant",email:"laura.howard@ks.gov"},
+{name:"Allie Friesen",role:"OK ODMHSAS Commissioner — $59.1M block grant",email:"afriesen@odmhsas.org"},
+{name:"Dave Richard",role:"NC DHHS Deputy Secretary — $109.2M + case study",email:"dave.richard@dhhs.nc.gov"},
+{name:"Marie Williams",role:"TN DMHSAS Commissioner — $73.6M block grant",email:"marie.williams@tn.gov"},
+{name:"Zac Wilson",role:"KS KDADS Peer Program — block grant health IT",email:"Zac.Wilson@ks.gov"},
+]},
+{id:"4",title:"SAMHSA FY2026 Drug Courts Program ($74M Appropriation)",angle:"icp",status:"new",verified:true,fit_score:87,agency:"SAMHSA — Center for Substance Abuse Treatment",state:"National",amount:"$74M total",deadline:"2026-05-30",overview:"Congress appropriated $74 million for SAMHSA Drug Courts in FY2026, with direction to expand training and technical assistance.",fit_reason:"Drug courts need case management tech for participant tracking, compliance monitoring, and outcome measurement.",requirements:["Participant tracking","Treatment compliance monitoring","Judicial review scheduling","Outcome measurement"],icp_types:["court"],source_url:"https://www.samhsa.gov/grants/grants-dashboard",
+contacts:[
+{name:"Carson Fox",role:"CEO, All Rise (NADCP) — 4,000+ treatment courts",email:""},
+{name:"Marie Williams",role:"TN DMHSAS — RISE26 drug court hub",email:"marie.williams@tn.gov"},
+{name:"Centerstone",role:"Multi-state CCBHC with drug court partnerships",email:"dguth@centerstone.org"},
+]},
+{id:"5",title:"NIH SBIR/STTR: Technologies to Address Health-Related Social Needs in SUD",angle:"beepurple",status:"new",verified:true,fit_score:82,agency:"National Institutes of Health (NIH)",state:"National",amount:"Phase I: ~$275K, Phase II: ~$1.75M",deadline:"2026-06-22",overview:"NIH SBIR/STTR funding for small businesses developing technology to address health-related social needs in substance use disorders.",fit_reason:"Direct BeePurple submission opportunity. 5CRM qualifies as a small business building SUD technology.",requirements:["Small business eligibility","Technology addressing HRSN in SUD","Commercialization path"],icp_types:[],source_url:"https://www.grants.gov",
+contacts:[
+{name:"Healing Transitions",role:"Case study partner for SBIR application",email:""},
+{name:"Laura Howard",role:"KS KDADS — letter of support (home state)",email:"laura.howard@ks.gov"},
+{name:"Dave Richard",role:"NC DHHS — letter of support (case study state)",email:"dave.richard@dhhs.nc.gov"},
+]},
+{id:"6",title:"SAMHSA Behavioral Health IT (BHIT) Initiative — Data Exchange Pilots",angle:"beepurple",status:"review",verified:true,fit_score:74,agency:"ASTP/ONC & SAMHSA",state:"National",amount:"$20M total initiative",deadline:"2026-12-31",overview:"A $20 million initiative testing standardized behavioral health data exchange using USCDI+ BH dataset and FHIR BH Implementation Guide.",fit_reason:"Position BeePurple as FHIR-compatible recovery CRM for emerging interoperability standards.",requirements:["Health IT platform","FHIR compatibility","42 CFR Part 2 consent management"],icp_types:[],source_url:"https://www.healthit.gov/topic/interoperability/behavioral-health-information-technology-bhit",
+contacts:[
+{name:"Compass Health Network",role:"CCBHC-PDI, 100K+ clients, interoperability need",email:"info@compasshealthnetwork.org"},
+{name:"Centerstone",role:"Multi-state CCBHC, data exchange across states",email:"dguth@centerstone.org"},
+{name:"Merakey Philadelphia",role:"CCBHC + crisis, real-time data needs",email:"info@merakey.org"},
+]},
+{id:"7",title:"Assisted Outpatient Treatment (AOT) Grant Program",angle:"icp",status:"new",verified:true,fit_score:85,agency:"HHS / SAMHSA",state:"National",amount:"$10M total program",deadline:"2026-06-30",overview:"Announced Feb 2, 2026. This $10 million program supports court-ordered, community-based outpatient mental health treatment for adults with serious mental illness.",fit_reason:"AOT programs need technology for court-ordered treatment compliance tracking, participant monitoring, and outcome reporting. BeePurple's case management and scheduling features map directly to AOT workflow requirements.",requirements:["Court-ordered treatment compliance tracking","Participant outcome monitoring","Care coordination between courts and providers","Community-based treatment documentation"],icp_types:["court","treatment_center"],source_url:"https://www.hhs.gov/about/news/2026/02/02/hhs-announces-100-million-streets-initiative.html",
+contacts:[
+{name:"Carson Fox",role:"CEO, All Rise (NADCP) — 4,000+ treatment courts",email:""},
+{name:"Marie Williams",role:"TN DMHSAS — RISE26 drug court hub",email:"marie.williams@tn.gov"},
+{name:"Centerstone",role:"Multi-state CCBHC with AOT partnerships",email:"dguth@centerstone.org"},
+{name:"Merakey Philadelphia",role:"CCBHC + court-ordered crisis services",email:"info@merakey.org"},
+]},
+{id:"8",title:"NIH: Digital Mental Health Interventions — Reach, Efficiency & Quality",angle:"beepurple",status:"review",verified:true,fit_score:68,agency:"National Institutes of Health (NIH)",state:"National",amount:"Varies by mechanism",deadline:"2027-09-08",overview:"NIH Notice of Special Interest to increase reach, efficiency, effectiveness, and quality of digital mental health interventions.",fit_reason:"BeePurple can position as a digital mental health platform enabling recovery centers to deliver tech-enabled interventions. Longer timeline (682 days) but positions BeePurple in NIH research ecosystem.",requirements:["Digital health platform","Mental health intervention delivery","Outcome measurement","Scalability evidence"],icp_types:[],source_url:"https://grants.nih.gov/grants/guide/notice-files/NOT-MH-25-145.html",
+contacts:[
+{name:"Healing Transitions",role:"Case study partner for NIH application",email:""},
+{name:"Centerstone",role:"Multi-state CCBHC, research partnerships",email:"dguth@centerstone.org"},
+{name:"Laura Howard",role:"KS KDADS — letter of support",email:"laura.howard@ks.gov"},
+]},
+];
 
-function B({ bg, fg, children }) { return <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 20, fontSize: 10, fontWeight: 700, letterSpacing: 0.6, fontFamily: ff, background: bg, color: fg, textTransform: "uppercase" }}>{children}</span>; }
-function PB({ p }) { const v = PRIO[p] || PRIO.medium; return <B bg={v.bg} fg={v.fg}>{v.icon} {v.l}</B>; }
-function TB({ t }) { const v = LTYPES[t]; if (!v) return null; return <B bg={v.c + "22"} fg={v.c}>{v.icon} {v.l}</B>; }
-function AB({ a }) { const bp = a === "beepurple"; return <B bg={bp ? C.purpleDim : C.goldDim} fg={bp ? C.purpleLight : C.goldLight}>{bp ? "🐝 BEEPURPLE" : "🎯 ICP"}</B>; }
-function SB({ s }) { const m = { new: [C.tealDim, C.teal, "NEW"], review: [C.goldDim, C.gold, "REVIEW"], approved: ["rgba(92,192,126,0.15)", C.ok, "APPROVED"], submitted: [C.purpleDim, C.purple, "SUBMITTED"], declined: ["rgba(212,114,114,0.15)", C.bad, "DECLINED"] }; const v = m[s] || m.new; return <B bg={v[0]} fg={v[1]}>{v[2]}</B>; }
-function FB({ s }) { const c = s >= 90 ? C.ok : s >= 75 ? C.gold : s >= 50 ? C.warn : C.bad; return <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 50, height: 5, background: C.border, borderRadius: 3 }}><div style={{ width: s + "%", height: "100%", background: c, borderRadius: 3 }} /></div><span style={{ fontSize: 11, fontWeight: 700, color: c, fontFamily: mono }}>{s}%</span></div>; }
-function Chip({ active, onClick, children }) { return <button onClick={onClick} style={{ padding: "5px 14px", borderRadius: 20, border: "1px solid " + (active ? C.gold : C.border), background: active ? C.goldDim : "transparent", color: active ? C.goldLight : C.textMuted, fontSize: 11, fontWeight: 600, fontFamily: ff, cursor: "pointer" }}>{children}</button>; }
-function Card({ children, style, onClick }) { return <div onClick={onClick} style={{ background: C.card, borderRadius: 12, border: "1px solid " + C.border, padding: "16px 20px", ...style }}>{children}</div>; }
-function SC({ label, value, color }) { return <div style={{ background: C.card, borderRadius: 10, padding: "12px 14px", border: "1px solid " + C.border, minWidth: 100 }}><p style={{ margin: 0, fontSize: 10, fontWeight: 600, color: C.textMuted, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</p><p style={{ margin: "4px 0 0", fontSize: 22, fontWeight: 800, color: color || C.text }}>{value}</p></div>; }
-function Empty({ icon, msg }) { return <div style={{ padding: "40px 20px", textAlign: "center" }}><p style={{ fontSize: 28 }}>{icon}</p><p style={{ color: C.textMuted, fontSize: 13, marginTop: 8 }}>{msg}</p></div>; }
-function DU({ d }) { if (!d) return null; const n = Math.ceil((new Date(d) - new Date()) / 86400000); return <span style={{ fontSize: 11, fontWeight: 600, color: n <= 14 ? C.bad : n <= 30 ? C.warn : C.textMuted, fontFamily: mono }}>{n <= 0 ? "PAST" : n + "d"}</span>; }
-function jp(v) { try { return typeof v === "string" ? JSON.parse(v) : v || []; } catch { return []; } }
+const LEADS=[
+{id:"s1",type:"settlement",title:"North Carolina ($750M+)",org:"NC Opioid Settlement",state:"NC",signal:"Healing Transitions home state. Track for tech spending.",priority:"hot",url:"https://www.ncdoj.gov/opioids/"},
+{id:"s2",type:"settlement",title:"Kansas ($200M+)",org:"KS Opioid Settlement",state:"KS",signal:"BeePurple home state.",priority:"hot",url:"https://ag.ks.gov/about-the-office/opioid-litigation"},
+{id:"s3",type:"settlement",title:"Oklahoma ($500M+)",org:"OK Opioid Settlement",state:"OK",signal:"ODMHSAS manages funds. 200+ recovery orgs.",priority:"hot",url:"https://oklahoma.gov/attorney-general/opioid-settlement.html"},
+{id:"s4",type:"settlement",title:"Ohio ($1B+)",org:"OH Opioid Settlement",state:"OH",signal:"OneOhio Recovery Foundation managing.",priority:"high",url:"https://www.ohioattorneygeneral.gov/About-AG/Opioid-Settlement"},
+{id:"s5",type:"settlement",title:"Florida ($1.5B+)",org:"FL Opioid Settlement",state:"FL",signal:"Largest allocation, county-driven.",priority:"high",url:"https://www.myfloridalegal.com/opioid"},
+{id:"j1",type:"job_signal",title:"Recovery center data coordinator Excel",org:"Multiple",state:"",signal:"Search Indeed for recovery orgs hiring Excel-based data roles.",priority:"medium",url:"https://www.indeed.com/jobs?q=recovery+center+data+coordinator+Excel"},
+{id:"j2",type:"job_signal",title:"Behavioral health data entry Excel",org:"Multiple",state:"",signal:"Orgs hiring data entry requiring Excel = no CRM.",priority:"medium",url:"https://www.indeed.com/jobs?q=behavioral+health+data+entry+Excel"},
+{id:"a1",type:"award",title:"SAMHSA Awards Page",org:"Multiple",state:"",signal:"Check for new FY2026 behavioral health awards. Each awardee has budget.",priority:"high",url:"https://www.samhsa.gov/grants/awards"},
+{id:"c1",type:"competitor",title:"Apricot by Social Solutions",org:"Apricot",state:"",signal:"Generic platform, not recovery-specific. Poor mobile. Expensive.",priority:"medium",url:"https://www.google.com/search?q=Apricot+Social+Solutions+recovery+review"},
+{id:"c2",type:"competitor",title:"ETO by Bonterra",org:"ETO",state:"",signal:"Complex, high cost. Being sunset/merged with Bonterra.",priority:"medium",url:"https://www.google.com/search?q=ETO+software+behavioral+health+problems"},
+{id:"c3",type:"competitor",title:"Salesforce NPSP",org:"Salesforce",state:"",signal:"Expensive customization. Not HIPAA out of box. Overwhelming.",priority:"medium",url:"https://www.google.com/search?q=Salesforce+nonprofit+recovery+center+problems"},
+{id:"n1",type:"new_org",title:"New Recovery Centers in KS",org:"Multiple",state:"KS",signal:"Greenfield opportunities. Zero tech infrastructure.",priority:"medium",url:"https://www.google.com/search?q=new+recovery+center+Kansas+2025+2026"},
+{id:"n2",type:"new_org",title:"New Recovery Centers in NC",org:"Multiple",state:"NC",signal:"Case study state. New orgs can reference Healing Transitions.",priority:"medium",url:"https://www.google.com/search?q=new+recovery+center+North+Carolina+2025+2026"},
+{id:"aw_l1",type:"awardee",title:"Centerstone (CCBHC-IA, $1M/yr)",org:"Centerstone",state:"TN",signal:"Multi-state CCBHC, 180K+ clients. Needs integrated CRM for CCBHC compliance.",priority:"high",url:"https://centerstone.org"},
+{id:"aw_l2",type:"awardee",title:"Merakey Philadelphia (CCBHC + $2M crisis)",org:"Merakey",state:"PA",signal:"$3M CCBHC grant with Kensington crisis supplement. Urgent tech need.",priority:"hot",url:"https://www.merakey.org"},
+{id:"aw_l3",type:"awardee",title:"CCAR - CT Recovery (BCOR, $300K/yr)",org:"CCAR",state:"CT",signal:"Pioneer RCO. 43K+ calls/yr, 8 recovery centers. Needs peer tracking CRM.",priority:"hot",url:"https://ccar.us"},
+{id:"aw_l4",type:"awardee",title:"Young People in Recovery (BCOR, $300K/yr)",org:"YPR",state:"CO",signal:"National RCO, 40+ state chapters. Needs centralized multi-chapter CRM.",priority:"hot",url:"https://youngpeopleinrecovery.org"},
+{id:"aw_l5",type:"awardee",title:"KDADS - Kansas (Block Grant + SOR, $52.8M)",org:"Kansas KDADS",state:"KS",signal:"HOME STATE. Distributes $52M+ to KS recovery providers. Health IT eligible.",priority:"hot",url:"https://www.kdads.ks.gov"},
+{id:"aw_l6",type:"awardee",title:"ODMHSAS - Oklahoma (Block Grant + SOR, $59.1M)",org:"Oklahoma ODMHSAS",state:"OK",signal:"200+ recovery orgs in network. Can recommend BeePurple statewide.",priority:"hot",url:"https://www.odmhsas.org"},
+{id:"aw_l7",type:"awardee",title:"NC DHHS (Block Grant + SOR, $109.2M)",org:"NC DHHS",state:"NC",signal:"Healing Transitions state. $109M+ for behavioral health. Proven case study.",priority:"hot",url:"https://www.ncdhhs.gov"},
+{id:"aw_l8",type:"awardee",title:"Oxford House Inc. (SOR sub-grants)",org:"Oxford House",state:"MD",signal:"3,000+ recovery houses in 44 states. Massive scale opportunity.",priority:"high",url:"https://www.oxfordhouse.org"},
+{id:"ct1",type:"contact",title:"Laura Howard",org:"Kansas KDADS",org_type:"state_doh",state:"KS",signal:"Home state, top priority",ct_name:"Laura Howard",ct_title:"Secretary",email:"laura.howard@ks.gov",priority:"hot",url:"https://www.linkedin.com/search/results/people/?keywords=Laura+Howard+Kansas+KDADS"},
+{id:"ct2",type:"contact",title:"Allie Friesen",org:"Oklahoma ODMHSAS",org_type:"state_doh",state:"OK",signal:"200+ recovery orgs in network",ct_name:"Allie Friesen",ct_title:"Commissioner",email:"afriesen@odmhsas.org",priority:"hot",url:"https://www.linkedin.com/search/results/people/?keywords=Allie+Friesen+ODMHSAS"},
+{id:"ct3",type:"contact",title:"Dave Richard",org:"NC DHHS",org_type:"state_doh",state:"NC",signal:"Healing Transitions case study state",ct_name:"Dave Richard",ct_title:"Deputy Secretary",email:"dave.richard@dhhs.nc.gov",priority:"hot",url:"https://www.linkedin.com/search/results/people/?keywords=Dave+Richard+NC+DHHS"},
+{id:"ct4",type:"contact",title:"Chris Budnick",org:"Healing Transitions",org_type:"recovery_center",state:"NC",signal:"EXISTING CUSTOMER",ct_name:"Chris Budnick",ct_title:"CEO",email:"",priority:"hot",url:"https://www.linkedin.com/search/results/people/?keywords=Chris+Budnick+Healing+Transitions"},
+{id:"ct5",type:"contact",title:"Carson Fox",org:"All Rise (NADCP)",org_type:"court",state:"VA",signal:"4,000+ treatment courts nationally",ct_name:"Carson Fox",ct_title:"CEO",email:"",priority:"hot",url:"https://www.linkedin.com/search/results/people/?keywords=Carson+Fox+All+Rise"},
+{id:"ct6",type:"contact",title:"Paul Molloy",org:"Oxford House Inc.",org_type:"recovery_house",state:"MD",signal:"3,000+ recovery houses",ct_name:"Paul Molloy",ct_title:"CEO",email:"info@oxfordhouse.org",priority:"high",url:"https://www.linkedin.com/search/results/people/?keywords=Paul+Molloy+Oxford+House"},
+{id:"ct7",type:"contact",title:"David Guth Jr.",org:"Centerstone",org_type:"ccbhc",state:"TN",signal:"Multi-state CCBHC",ct_name:"David C. Guth Jr.",ct_title:"CEO",email:"dguth@centerstone.org",priority:"high",url:"https://www.linkedin.com/search/results/people/?keywords=David+Guth+Centerstone"},
+{id:"ct8",type:"contact",org:"Compass Health Network",org_type:"ccbhc",state:"MO",signal:"CCBHC-PDI, 100K+ clients",ct_name:"Dennis Carpenter",ct_title:"CEO",email:"info@compasshealthnetwork.org",priority:"high"},
+{id:"ct9",type:"contact",org:"Merakey Philadelphia",org_type:"ccbhc",state:"PA",signal:"CCBHC + $2M Kensington supplement",ct_name:"Mary Dougherty",ct_title:"Regional VP",email:"info@merakey.org",priority:"hot"},
+{id:"ct10",type:"contact",org:"CCAR",org_type:"peer_org",state:"CT",signal:"110K+ Recovery Coach Academy grads",ct_name:"Stacy Charpentier",ct_title:"Executive Director",email:"training@ccar.us",priority:"hot"},
+{id:"ct11",type:"contact",org:"Young People in Recovery",org_type:"peer_org",state:"CO",signal:"BCR grantee, 40+ state chapters",ct_name:"Jeremy Kinser",ct_title:"Executive Director",email:"info@youngpeopleinrecovery.org",priority:"hot"},
+{id:"ct12",type:"contact",org:"Faces & Voices of Recovery",org_type:"peer_org",state:"DC",signal:"National RCO advocacy leader",ct_name:"Patty McCarthy Metcalf",ct_title:"Executive Director",email:"info@facesandvoicesofrecovery.org",priority:"high"},
+{id:"ct13",type:"contact",org:"Tennessee DMHSAS",org_type:"state_doh",state:"TN",signal:"$73.6M block grant + RISE26 state",ct_name:"Marie Williams",ct_title:"Commissioner",email:"marie.williams@tn.gov",priority:"high"},
+{id:"ct14",type:"contact",org:"MHA Oklahoma",org_type:"ccbhc",state:"OK",signal:"CCBHC-PDI in target state",ct_name:"Executive Director",ct_title:"Executive Leadership",email:"info@mhaok.org",priority:"high"},
+{id:"ct15",type:"contact",org:"CalMHSA",org_type:"peer_org",state:"CA",signal:"Runs ONLY statewide peer certification",ct_name:"CalMHSA Peer Certification",ct_title:"Certifying Entity",email:"PeerCertification@calmhsa.org",priority:"hot"},
+{id:"ct16",type:"contact",org:"DHCS California",org_type:"state_doh",state:"CA",signal:"SB 803 Medi-Cal peer services",ct_name:"DHCS County Support",ct_title:"State Medicaid / Policy",email:"CountySupport@dhcs.ca.gov",priority:"high"},
+{id:"ct17",type:"contact",org:"DHCS California",org_type:"state_doh",state:"CA",signal:"SB 803 Implementation",ct_name:"DHCS Peers Team",ct_title:"Peer Policy",email:"Peers@dhcs.ca.gov",priority:"high"},
+{id:"ct18",type:"contact",org:"ODMHSAS",org_type:"peer_org",state:"OK",signal:"Manages all OK peer certification",ct_name:"ODMHSAS PRSS Team",ct_title:"Peer Certification & Workforce",email:"PRSSteam@odmhsas.org",priority:"hot"},
+{id:"ct19",type:"contact",org:"ODMHSAS",org_type:"peer_org",state:"OK",signal:"Family peer specialist track",ct_name:"Kimberly Miller",ct_title:"Family Peer Support Specialist",email:"Kimberly.miller@odmhsas.org",priority:"high"},
+{id:"ct20",type:"contact",org:"ODMHSAS",org_type:"peer_org",state:"OK",signal:"Peer training coordination",ct_name:"Nancy Falcon",ct_title:"Peer Training Coordinator",email:"Nancy.falcon@odmhsas.org",priority:"high"},
+{id:"ct21",type:"contact",org:"Kansas KDADS",org_type:"peer_org",state:"KS",signal:"Manages ALL 3 KS peer tracks",ct_name:"Zac Wilson",ct_title:"Peer Specialist Program Manager",email:"Zac.Wilson@ks.gov",priority:"hot"},
+{id:"ct22",type:"contact",org:"Kansas KDADS / Wichita State",org_type:"peer_org",state:"KS",signal:"Training coordinator",ct_name:"Charles Bartlett",ct_title:"KDADS Training Coordinator",email:"charles.bartlett@ks.gov",priority:"high"},
+{id:"ct23",type:"contact",org:"Kansas KDADS",org_type:"peer_org",state:"KS",signal:"Parent peer track",ct_name:"KDADS Parent Peer Team",ct_title:"Parent Peer Program",email:"kdads.parentpeer@ks.gov",priority:"high"},
+{id:"ct24",type:"contact",org:"NC DHHS",org_type:"peer_org",state:"NC",signal:"6,000+ CPSS statewide",ct_name:"NC DHHS Peer Support",ct_title:"Peer Program Management",email:"DMHPeerSupport@dhhs.nc.gov",priority:"hot"},
+{id:"ct25",type:"contact",org:"UNC / NCCPSS",org_type:"peer_org",state:"NC",signal:"Certification admin",ct_name:"NCCPSS Program (UNC)",ct_title:"Certification Administration",email:"NCCPSSProgram@unc.edu",priority:"high"},
+{id:"ct26",type:"contact",org:"Johnston County",org_type:"state_doh",state:"NC",signal:"Opioid settlement peer scholarships",ct_name:"Mary Banks",ct_title:"Opioid Grant Coordinator",email:"Mary.Banks@johnstonnc.gov",priority:"high"},
+{id:"ct27",type:"contact",org:"OhioPRO",org_type:"peer_org",state:"OH",signal:"Coordinates 5 PTACs statewide",ct_name:"Michael J. Krause",ct_title:"Executive Director",email:"mkrause@ohio-pro.com",priority:"hot"},
+{id:"ct28",type:"contact",org:"The P.E.E.R. Center",org_type:"peer_org",state:"OH",signal:"Columbus PTAC",ct_name:"Gary Krafthefer",ct_title:"PTAC Director",email:"gkrafthefer@thepeercenter.org",priority:"high"},
+{id:"ct29",type:"contact",org:"Sandusky Artisans Recovery",org_type:"peer_org",state:"OH",signal:"PTAC hub",ct_name:"Emily Werner",ct_title:"PTAC Coordinator",email:"ehubsupport@artisansrecovery.org",priority:"high"},
+{id:"ct30",type:"contact",org:"Goodwill Easter Seals",org_type:"peer_org",state:"OH",signal:"PTAC certification hub",ct_name:"Ashley Smithson",ct_title:"Cert Assistance Hub",email:"certificationassistancehub@gesmv.org",priority:"high"},
+{id:"ct31",type:"contact",org:"OneOhio Foundation",org_type:"state_doh",state:"OH",signal:"$1B+ opioid settlement tech funding",ct_name:"OneOhio Foundation",ct_title:"Settlement Administration",email:"info@oneohiorecovery.org",priority:"hot"},
+{id:"ct32",type:"contact",org:"PeerForce",org_type:"peer_org",state:"TX",signal:"State peer workforce hub",ct_name:"PeerForce",ct_title:"Workforce Development",email:"info@peerforce.org",priority:"hot"},
+{id:"ct33",type:"contact",org:"Texas HHSC",org_type:"state_doh",state:"TX",signal:"State peer services policy",ct_name:"HHSC Peer Services",ct_title:"Peer Policy Unit",email:"PeerServices@hhs.texas.gov",priority:"high"},
+{id:"ct34",type:"contact",org:"Texas Certification Board",org_type:"peer_org",state:"TX",signal:"Credentialing body",ct_name:"Texas Certification Board",ct_title:"Credentialing",email:"info@tcbap.org",priority:"high"},
+{id:"ct35",type:"contact",org:"Peer Support Coalition of FL",org_type:"peer_org",state:"FL",signal:"Trains thousands, PLAFL catalog",ct_name:"PSCFL",ct_title:"Training & Advocacy",email:"info@peersupportfl.org",priority:"hot"},
+{id:"ct36",type:"contact",org:"Florida Certification Board",org_type:"peer_org",state:"FL",signal:"All FL peer credentialing",ct_name:"Florida Certification Board",ct_title:"Credentialing",email:"info@flcertificationboard.org",priority:"high"},
+{id:"ct37",type:"contact",org:"Broward BHC",org_type:"ccbhc",state:"FL",signal:"Managing Entity, regional adoption",ct_name:"Elida Segrera",ct_title:"Director of Operations",email:"esegrera@bbhcflorida.org",priority:"high"},
+{id:"ct38",type:"contact",org:"PA OMHSAS",org_type:"state_doh",state:"PA",signal:"State peer certification",ct_name:"PA OMHSAS Peer Support",ct_title:"Peer Certification",email:"ra-peersupport@pa.gov",priority:"high"},
+{id:"ct39",type:"contact",org:"PA Peer Support Coalition",org_type:"peer_org",state:"PA",signal:"Statewide peer advocacy",ct_name:"PA Peer Support Coalition",ct_title:"Advocacy",email:"info@papeersupportcoalition.org",priority:"high"},
+{id:"ct40",type:"contact",org:"TDMHSAS",org_type:"state_doh",state:"TN",signal:"Peer certification management",ct_name:"TDMHSAS OCA",ct_title:"Office of Consumer Affairs",email:"OCA.TDMHSAS@tn.gov",priority:"high"},
+{id:"ct41",type:"contact",org:"Washington HCA",org_type:"state_doh",state:"WA",signal:"CPC to CPSS transition",ct_name:"HCA Peer Services",ct_title:"Peer Services Unit",email:"peerservices@hca.wa.gov",priority:"hot"},
+{id:"ct42",type:"contact",org:"WA Recovery Alliance",org_type:"peer_org",state:"WA",signal:"Statewide recovery advocacy",ct_name:"WA Recovery Alliance",ct_title:"Recovery Advocacy",email:"info@washingtonrecoveryalliance.org",priority:"high"},
+];
 
-function PipelineTab({ rfps, onSelect }) {
-  const [af, setAf] = useState("all");
-  const [sf, setSf] = useState("all");
-  const f = useMemo(() => rfps.filter(r => (af === "all" || r.angle === af) && (sf === "all" || r.status === sf)).sort((a, b) => (b.fit_score || 0) - (a.fit_score || 0)), [rfps, af, sf]);
-  return <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-      <span style={{ fontSize: 11, fontWeight: 600, color: C.textDim }}>Angle:</span>
-      <Chip active={af === "all"} onClick={() => setAf("all")}>All</Chip><Chip active={af === "beepurple"} onClick={() => setAf("beepurple")}>🐝 Direct</Chip><Chip active={af === "icp"} onClick={() => setAf("icp")}>🎯 ICP</Chip>
-      <span style={{ width: 1, height: 20, background: C.border }} />
-      <span style={{ fontSize: 11, fontWeight: 600, color: C.textDim }}>Status:</span>
-      <Chip active={sf === "all"} onClick={() => setSf("all")}>All</Chip><Chip active={sf === "new"} onClick={() => setSf("new")}>New</Chip><Chip active={sf === "review"} onClick={() => setSf("review")}>Review</Chip><Chip active={sf === "approved"} onClick={() => setSf("approved")}>Approved</Chip>
+const EVENTS=[
+{id:"e1",name:"NatCon26",date:"2026-04-27",city:"Denver, CO",icps:["ccbhc","treatment_center"],desc:"6,000+ behavioral health professionals. 200+ exhibitors. Largest conference in mental health and substance use care. 500+ speakers, 150+ CEU credits.",url:"https://www.thenationalcouncil.org/natcon",linkedin:"https://www.linkedin.com/company/national-council-for-mental-wellbeing",priority:"hot"},
+{id:"e2",name:"SAMHSA Block Grant Conference",date:"2026-05-01",city:"Washington, DC",icps:["state_doh","recovery_center"],desc:"State agencies discuss block grant spending. Decision-makers who control health IT budgets.",url:"https://www.samhsa.gov/grants/block-grants",linkedin:null,priority:"hot"},
+{id:"e3",name:"RISE26 - All Rise National Conference",date:"2026-07-20",city:"Nashville, TN",icps:["court"],desc:"4,000+ treatment court professionals. Largest drug court conference in the world.",url:"https://allrise.org/rise/",linkedin:null,priority:"hot"},
+{id:"e4",name:"Oklahoma Momentum Conference",date:"2026-08-01",city:"Oklahoma City, OK",icps:["recovery_center","peer_org"],desc:"ODMHSAS network of 200+ recovery support organizations.",url:"https://www.odmhsas.org",linkedin:null,priority:"high"},
+{id:"e5",name:"NASHCO Conference",date:"2026-09-15",city:"TBD",icps:["recovery_house"],desc:"National recovery housing operators. Perfect for BeePurple's sober living features.",url:"https://nashco.org",linkedin:null,priority:"high"},
+{id:"e6",name:"BRI Opioid Crisis Management Congress",date:"2026-02-26",city:"TBD",icps:["state_doh","treatment_center","recovery_center"],desc:"Public health leaders, healthcare providers, law enforcement. Sessions on settlement fund management, mobile crisis response, data-driven opioid response. Key session: 'Data-Driven Approaches to Opioid Response'.",url:"https://brinetwork.com/2026-opioid-crisis-management-congress/",linkedin:"https://www.linkedin.com/company/business-research-intelligence-network",priority:"hot"},
+{id:"e7",name:"EMPOWER 2026: NAADAC Annual Conference",date:"2026-08-29",city:"Kansas City, MO",icps:["treatment_center","peer_org","recovery_center"],desc:"Largest addiction professionals conference. 1,000+ counselors, therapists, addiction specialists. HOME STATE ADJACENT (Kansas City). Pre/post conference sessions. Exhibit hall.",url:"https://www.naadac.org/annualconference",linkedin:"https://www.linkedin.com/company/naadac-the-association-for-addiction-professionals",priority:"hot"},
+{id:"e8",name:"NASMHPD 2026 Annual Meeting",date:"2026-07-26",city:"Washington, DC",icps:["state_doh"],desc:"State mental health commissioners and executive teams ONLY. Theme: 'Together Towards Tomorrow: Innovating Mental Health Solutions'. Direct access to state-level decision-makers who control block grant spending. Crisis Now 4 summit follows July 28-29.",url:"https://nasmhpd.org/nasmhpd-2026-annual-meeting/",linkedin:"https://www.linkedin.com/company/national-association-of-state-mental-health-program-directors-nasmhpd-",priority:"hot"},
+{id:"e9",name:"ARCHway Institute Marches Forward 2026",date:"2026-03-02",city:"Little Rock, AR",icps:["recovery_center","treatment_center","peer_org"],desc:"FREE one-day event. Traditional and faith-based treatment centers, RCOs, justice reentry programs. Workshops on advancing recovery ecosystem. Sponsorship from $1K (vendor table) to $10K (presentation slot).",url:"https://archwayinstitute-bloom.kindful.com/e/archway-institute-marches-forward-2026",linkedin:"https://www.linkedin.com/company/thearchwayinstitute",priority:"high"},
+];
+
+// SAMHSA Award Recipients — BeePurple Opportunities
+// Sources: SAMHSA grants dashboard, CCBHC expansion program, BCR awards, SOR grants, Drug Court grants
+var AWARDS=[
+{id:"aw1",org:"Centerstone",city:"Nashville",state:"TN",program:"CCBHC-IA",amount:"$1,000,000/yr",fy:"FY2022-2026",contact:"David C. Guth Jr.",title:"CEO",email:"dguth@centerstone.org",emailNote:"Pattern: first initial+last@centerstone.org | Main: (615) 463-6240",linkedin:"https://www.linkedin.com/in/davidcguth/",fit:"high",icpType:"ccbhc",why:"Multi-state CCBHC with Nashville HQ. 180,000+ clients across TN, IN, IL, FL. Needs integrated behavioral health CRM for client tracking and CCBHC criteria compliance reporting.",needs:["Client tracking across multiple state locations","CCBHC criteria compliance reporting","Outcome measurement for SAMHSA","Care coordination between crisis, treatment, and recovery"]},
+{id:"aw2",org:"Compass Health Network",city:"Clinton",state:"MO",program:"CCBHC-PDI",amount:"$1,000,000/yr",fy:"FY2022-2026",contact:"Dennis Carpenter",title:"CEO",email:"info@compasshealthnetwork.org",emailNote:"Main line: (660) 885-8151 | Pattern: first.last@compasshealthnetwork.org",fit:"high",icpType:"ccbhc",why:"Large Missouri CCBHC serving 100,000+ clients across 50+ sites. Needs scalable CRM for intake, assessment, treatment planning, and GPRA/NOMS reporting.",needs:["Scalable client management for 100K+ clients","GPRA/NOMS automated reporting","Multi-site coordination","Peer support documentation"]},
+{id:"aw3",org:"Merakey Philadelphia",city:"Philadelphia",state:"PA",program:"CCBHC + $2M Supplement",amount:"$3,000,000",fy:"FY2022-2026",contact:"Mary Dougherty",title:"Regional VP",email:"info@merakey.org",emailNote:"Main: (215) 831-1800 | Pattern: first.last@merakey.org",fit:"hot",icpType:"ccbhc",why:"Received special $2M Kensington crisis supplement on top of CCBHC grant. Managing opioid crisis in highest-overdose area. Urgent need for real-time client tracking.",needs:["Crisis response client tracking","Overdose event documentation","Street outreach mobile documentation","Real-time bed/service availability"]},
+{id:"aw4",org:"CCAR (CT Community for Addiction Recovery)",city:"Hartford",state:"CT",program:"Building Communities of Recovery",amount:"$300,000/yr",fy:"FY2024-2027",contact:"Stacy Charpentier",title:"Executive Director",email:"training@ccar.us",emailNote:"New ED as of Oct 2024 (replaced Phillip Valentine) | Main: 860-244-2227 | info@ccar.us",linkedin:"https://www.linkedin.com/in/stacy-charpentier-rcpf-cprs-icpr-3616734/",fit:"hot",icpType:"peer_org",why:"Pioneer RCO. 8 Recovery Community Centers across CT. 43,000+ Telephone Recovery Support calls/year. 110,000+ people trained in Recovery Coach Academy. Needs peer encounter tracking and recovery capital documentation.",needs:["Peer recovery support encounter logging","Recovery capital assessment tracking","Volunteer/peer specialist management","SAMHSA BCOR outcome reporting"]},
+{id:"aw5",org:"Young People in Recovery",city:"Denver",state:"CO",program:"Building Communities of Recovery",amount:"$300,000/yr",fy:"FY2024-2027",contact:"Jeremy Kinser",title:"Executive Director",email:"info@youngpeopleinrecovery.org",emailNote:"Pattern: first@youngpeopleinrecovery.org | Main site: youngpeopleinrecovery.org/contact",fit:"hot",icpType:"peer_org",why:"National RCO focused on 18-35. BCOR grantee with chapters in 40+ states. Needs centralized CRM for tracking recovery support across distributed chapter network.",needs:["Multi-chapter client tracking","Recovery support encounter documentation","Young adult demographic profiling","National outcome aggregation"]},
+{id:"aw6",org:"Faces & Voices of Recovery",city:"Washington",state:"DC",program:"Building Communities of Recovery",amount:"$300,000/yr",fy:"FY2024-2027",contact:"Patty McCarthy Metcalf",title:"Executive Director",email:"info@facesandvoicesofrecovery.org",emailNote:"Pattern: first.last@facesandvoicesofrecovery.org | Main: (202) 737-0690",linkedin:"https://www.linkedin.com/in/patty-mccarthy-3b83b5b/",fit:"high",icpType:"peer_org",why:"National RCO advocacy leader coordinating recovery community organizing across the US. Needs technology for recovery support service tracking and community-level impact measurement.",needs:["Recovery community organizing documentation","Advocacy event and outreach tracking","BCOR grant compliance reporting","National network coordination"]},
+{id:"aw7",org:"Kansas KDADS",city:"Topeka",state:"KS",program:"SUPTRS Block Grant + SOR",amount:"$52.8M total",fy:"FY2026-2027",contact:"Laura Howard",title:"Secretary",email:"laura.howard@ks.gov",emailNote:"Pattern: first.last@ks.gov | KDADS main: (785) 296-3959",fit:"hot",icpType:"state_doh",why:"BeePurple HOME STATE. KDADS distributes block grant and SOR funding to recovery centers across Kansas. Block grant guide explicitly authorizes health IT spending.",needs:["Statewide recovery center data system","Health IT adoption for sub-grantees","Opioid response outcome tracking","Block grant compliance reporting"]},
+{id:"aw8",org:"Oklahoma ODMHSAS",city:"Oklahoma City",state:"OK",program:"SUPTRS Block Grant + SOR",amount:"$59.1M total",fy:"FY2026-2027",contact:"Allie Friesen",title:"Commissioner",email:"afriesen@odmhsas.org",emailNote:"Pattern: first initial+last@odmhsas.org | Main: (405) 522-3908",fit:"hot",icpType:"state_doh",why:"200+ recovery orgs in ODMHSAS network. Massive distribution network. BeePurple can become recommended CRM for entire state recovery ecosystem.",needs:["Network-wide recovery center CRM","200+ org deployment capability","Statewide outcome aggregation","SOR grant compliance"]},
+{id:"aw9",org:"North Carolina DHHS",city:"Raleigh",state:"NC",program:"SUPTRS Block Grant + SOR",amount:"$109.2M total",fy:"FY2026-2027",contact:"Dave Richard",title:"Deputy Secretary",email:"dave.richard@dhhs.nc.gov",emailNote:"Pattern: first.last@dhhs.nc.gov | DHHS main: (919) 855-4800",fit:"hot",icpType:"state_doh",why:"HEALING TRANSITIONS HOME STATE. Existing case study. NC DHHS distributes $109M+ to behavioral health providers. BeePurple already proven in NC.",needs:["Statewide behavioral health IT","Leverage Healing Transitions case study","Sub-grantee CRM standardization","SOR outcome tracking"]},
+{id:"aw10",org:"Tennessee DMHSAS",city:"Nashville",state:"TN",program:"SUPTRS Block Grant + SOR",amount:"$73.6M total",fy:"FY2026-2027",contact:"Marie Williams",title:"Commissioner",email:"marie.williams@tn.gov",emailNote:"Pattern: first.last@tn.gov | DMHSAS main: (615) 532-6500",fit:"high",icpType:"state_doh",why:"Nashville hub for treatment courts and behavioral health. Major RISE26 conference state. TN distributes $73M+ to behavioral health programs statewide.",needs:["Treatment court case management","Recovery center network CRM","Drug court participant tracking","Statewide SOR reporting"]},
+{id:"aw11",org:"Oxford House Inc.",city:"Silver Spring",state:"MD",program:"SOR Sub-grants (via states)",amount:"Various per-state",fy:"Ongoing",contact:"Paul Molloy",title:"CEO",email:"info@oxfordhouse.org",emailNote:"Pattern: pmolloy@oxfordhouse.org | Main: (301) 587-2916",linkedin:"https://www.linkedin.com/in/paul-molloy-82515311/",fit:"high",icpType:"recovery_house",why:"3,000+ self-supporting recovery houses in 44 states. Massive scale opportunity for BeePurple's recovery housing features.",needs:["Recovery house occupancy tracking","Resident progress documentation","Multi-state reporting aggregation","Recovery outcome measurement"]},
+{id:"aw12",org:"Mental Health Association Oklahoma",city:"Tulsa",state:"OK",program:"CCBHC-PDI",amount:"$1,000,000/yr",fy:"FY2023-2026",contact:"Executive Director",title:"Executive Leadership",email:"info@mhaok.org",emailNote:"Main: (918) 585-1213 | mhaok.org/contact",fit:"high",icpType:"ccbhc",why:"CCBHC in key BeePurple target state. Needs integrated platform for CCBHC criteria compliance including crisis services, outpatient treatment, peer support.",needs:["CCBHC criteria compliance","Crisis services documentation","Peer support tracking","Quality metrics reporting"]},
+];
+
+var DIRECTORY=[
+{id:"d1",org:"Hope Recovery Center",city:"Wichita",state:"KS",signal:"Job posting: 'Data entry, Excel required'",priority:"hot",source:"Indeed",icpType:"recovery_center"},
+{id:"d2",org:"Reno Behavioral Health",city:"Reno",state:"NV",signal:"BCR grantee, no tech vendor in application",priority:"hot",source:"SAMHSA",icpType:"recovery_center"},
+{id:"d3",org:"Recovery Alliance El Paso",city:"El Paso",state:"TX",signal:"Hiring peer specialist, paper docs required",priority:"high",source:"Indeed",icpType:"peer_org"},
+{id:"d4",org:"Pine Belt Mental Healthcare",city:"Hattiesburg",state:"MS",signal:"New CCBHC-PDI, building from scratch",priority:"hot",source:"SAMHSA CCBHC",icpType:"ccbhc"},
+{id:"d5",org:"Turning Point Recovery",city:"Tulsa",state:"OK",signal:"ODMHSAS member, no CRM listed",priority:"hot",source:"ODMHSAS",icpType:"recovery_center"},
+{id:"d6",org:"Kansas Recovery Network",city:"Topeka",state:"KS",signal:"Home state RCO, using spreadsheets",priority:"hot",source:"KDADS",icpType:"peer_org"},
+{id:"d7",org:"Carolina Recovery Alliance",city:"Charlotte",state:"NC",signal:"New RCO in case study state",priority:"high",source:"NC DHHS",icpType:"recovery_center"},
+{id:"d8",org:"Serenity House OKC",city:"Oklahoma City",state:"OK",signal:"Recovery house, paper resident logs",priority:"high",source:"ODMHSAS",icpType:"recovery_house"},
+];
+var PEERPIPE=[
+{state:"California",certified:5000,medicaid:true,priority:"hot",
+whyHere:"Largest peer workforce in the nation. SB 803 (2020) created Medi-Cal reimbursement for peer services. CalMHSA runs the ONLY statewide certification program. 53 of 58 counties now opted in. Exam offered in 10 languages. DHCS actively distributing fee waivers and scholarships to accelerate certification. Massive expansion underway with new training providers being approved quarterly.",
+whyPriority:"HOT because: (1) 5,000+ already certified with aggressive state expansion targets, (2) CalMHSA hiring program specialists NOW to scale, (3) exam in 10 languages = huge multilingual peer workforce with no documentation tools in their language, (4) new Documentation Best Practices guide just released = they know peers need doc tools, (5) fee waivers being distributed = removing cost barriers = flood of new peers incoming.",
+nextSteps:"1. Contact CalMHSA certification team about becoming an approved technology partner for peer documentation.\n2. Pitch BeePurple Classic as the complement to their new Documentation Best Practices guide, and the Peer Field Navigator as the credential reference.\n3. Target the newly approved training entities (Tarzana Treatment Centers, Parents Anonymous, CCAR) as distribution partners.\n4. Present at county behavioral health directors meetings through CBHDA.\n5. Apply to be listed on CalMHSA's Peer Certification Job Board as a technology resource.",
+contacts:[
+{name:"CalMHSA Peer Certification Team",role:"Statewide Certifying Entity",email:"PeerCertification@calmhsa.org",phone:"(279) 234-0699"},
+{name:"DHCS County Support",role:"State Medicaid / Policy",email:"CountySupport@dhcs.ca.gov",phone:""},
+{name:"DHCS Peers Team",role:"SB 803 Implementation",email:"Peers@dhcs.ca.gov",phone:""},
+],
+emailSubject:"Peer Documentation Technology for California's 5,000+ Certified Peer Support Specialists",
+bpFeatures:[
+{product:"BeePurple Classic",feature:"Mobile Peer Encounter Documentation",why:"5,000+ certified peers doing field work across 53 counties need to document encounters from their phone \u2014 not drive back to an office. BeePurple Classic\u2019s mobile-responsive platform lets peers log encounters, referrals, and recovery plan updates from any device in real time."},
+{product:"Peer Field Navigator",feature:"CA Credential & Billing Reference",why:"The ONLY place where CA\u2019s Medi-Cal PSS certification requirements, billing codes, payer data, and training hours exist alongside all 49 other states \u2014 all in one tool. Peers and supervisors can instantly compare what\u2019s required, what\u2019s billable, and at what rate."},
+{product:"Peer Field Navigator",feature:"50-State Billing Code Comparison",why:"CA peers who relocate or orgs that operate across state lines can compare certification billing eligibility in every state. No other resource compiles this data."},
+{product:"Addiction Field Navigator",feature:"CA Addiction Counselor Credentials",why:"Maps CA\u2019s full addiction counselor credentialing landscape alongside peer tracks. Shows billing codes, payer data, and the career ladder from peer to clinical roles \u2014 all in one tool for the first time."},
+{product:"BeePurple Classic",feature:"Outcomes & Impact Reporting",why:"CalMHSA requires documentation for Medi-Cal billing. BeePurple generates compliant service records with clear dashboards for engagement, retention, and program effectiveness."},
+{product:"BeePurple State",feature:"Statewide Management Dashboards",why:"CalMHSA and DHCS need aggregated data across 53 opted-in counties. BeePurple State provides state-level oversight and regional performance metrics."},
+{product:"KitKeeper",feature:"Naloxone/NRT Kit Tracking",why:"Many CA peer programs distribute Naloxone. KitKeeper provides free real-time tracking of kit distribution by location, site, and recipient demographics."}
+],
+emailBody:"Dear CalMHSA Peer Certification Team,\n\nI\u2019m reaching out regarding technology solutions purpose-built for the peer support specialists you\u2019re certifying across California.\n\nWith 5,000+ Medi-Cal Peer Support Specialists now certified, we\u2019d like to introduce:\n\n1. BeePurple Classic \u2014 our Recovery Center CRM that lets peers document encounters, track recovery journeys, and generate Medicaid-compliant service records from any mobile device. Already deployed at Healing Transitions (Raleigh, NC).\n\n2. The Peer Field Navigator \u2014 the first and only place where all 50 states\u2019 peer certification requirements, billing codes, and payer data exist in one tool. Your certified specialists can instantly look up what\u2019s billable, at what rate, and how CA\u2019s requirements compare nationally.\n\nBoth are HIPAA-compliant and SOC 2 Type II certified. Would 20 minutes work to discuss how these could support your program?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"
+},
+{state:"Oklahoma",certified:1200,medicaid:true,priority:"hot",
+whyHere:"ODMHSAS directly manages all peer certification, training, and workforce development. 1,000+ actively certified peers providing 180,000+ services annually to 35,000+ consumers. New integrated PRSS 4-day training launched Sept 2024 with Aug 2025 deadline for all existing peers to recertify. ODMHSAS Peer Division partners with OSU/OKC and Connors State for college credit. UMA Tulsa recruits bilingual Hispanic peers. Active Peer Network platform. Strong RCO ecosystem (OCARTA, TEEM).",
+whyPriority:"HOT because: (1) mandatory recertification deadline Aug 2025 = every certified peer in OK is actively re-engaging with the system RIGHT NOW, (2) ODMHSAS runs everything centrally \u2014 one relationship = access to 1,200+ peers, (3) 200+ orgs employing peers with no standard documentation tool, (4) $500M+ opioid settlement actively funding recovery tech, (5) Peer Support Calls every 2nd/3rd Friday = built-in demo opportunity, (6) ODMHSAS Momentum Conference = annual showcase event.",
+nextSteps:"1. Contact PRSSteam@odmhsas.org to introduce BeePurple Classic + Peer Field Navigator for certified peers.\n2. Request to present at biweekly PRSS Support Calls (2nd & 3rd Fridays at 2pm).\n3. Target ODMHSAS Momentum Conference for exhibit/presentation slot.\n4. Connect with TEEM in Tulsa as local distribution partner (they run PRSS mentorship training).\n5. Pitch to OCARTA (peer-run org in OKC) for 'Peer of the Year' tech integration.\n6. Engage Kimberly Miller for F-PRSS family peer track.",
+contacts:[
+{name:"ODMHSAS PRSS Team",role:"Peer Certification & Workforce",email:"PRSSteam@odmhsas.org",phone:"(405) 248-9200"},
+{name:"Kimberly Miller",role:"Family Peer Support Specialist",email:"Kimberly.miller@odmhsas.org",phone:""},
+{name:"Nancy Falcon",role:"Peer Training Coordinator",email:"Nancy.falcon@odmhsas.org",phone:""},
+{name:"ODMHSAS Training Institute",role:"Central Training",email:"",phone:"(405) 248-9191"},
+],
+emailSubject:"Mobile Documentation Tool for Oklahoma\u2019s 1,200+ Certified Peer Recovery Support Specialists",
+bpFeatures:[
+{product:"BeePurple Classic",feature:"Mobile Peer Encounter Documentation",why:"1,200+ peers providing 180,000+ services/year across 200+ orgs. Most encounters happen in shelters, community settings, homes \u2014 not offices. BeePurple Classic lets peers document from any phone or tablet."},
+{product:"Peer Field Navigator",feature:"OK Credential & Billing Reference",why:"The ONLY place where OK\u2019s PRSS certification requirements, billing codes, CEU needs, and Medicaid rates exist alongside all 49 other states. Essential for peers, supervisors, and ODMHSAS administrators."},
+{product:"Addiction Field Navigator",feature:"OK Addiction Counselor Credentials",why:"Maps OK\u2019s full addiction counselor credentialing landscape alongside the PRSS peer track \u2014 billing codes, payer data, training hours, and career ladder from peer to clinical roles. All in one tool for the first time."},
+{product:"BeePurple Classic",feature:"Peer & Case Management Tracking",why:"Full tracking of peer support, housing, employment, transport, benefits, and nonclinical recovery work \u2014 exactly what ODMHSAS-certified peers do daily."},
+{product:"BeePurple Classic",feature:"State Funder & Grant Reporting",why:"ODMHSAS requires reporting from all 200+ contracted orgs. BeePurple generates built-in reports for state funders with exportable proof of impact."},
+{product:"BeePurple State",feature:"Recovery Support Services Engagement",why:"ODMHSAS tracks TRS calls, electronic support touches, and recovery support interactions. BeePurple State monitors all of these engagement metrics continuously."},
+{product:"KitKeeper",feature:"Naloxone Distribution Tracking",why:"Oklahoma\u2019s opioid crisis response includes widespread Naloxone distribution. KitKeeper tracks distribution by site, location, and demographics for free."}
+],
+emailBody:"Dear ODMHSAS Peer Recovery Support Team,\n\nI\u2019m reaching out because Oklahoma\u2019s Peer Division is doing exceptional work \u2014 1,000+ actively certified peers delivering 180,000+ services annually is remarkable. We\u2019d like to introduce two tools built for this workforce:\n\n1. BeePurple Classic \u2014 our Recovery Center CRM that lets PRSS document encounters from any phone or tablet, track recovery journeys, and generate ODMHSAS-compliant reports automatically. Already deployed at Healing Transitions in NC.\n\n2. The Peer Field Navigator \u2014 the first and only reference tool where Oklahoma\u2019s PRSS certification requirements, billing codes, and payer data sit alongside all 49 other states for instant comparison. No other resource compiles this.\n\nWe\u2019d love to present at an upcoming PRSS Support Call or at the Momentum Conference. Would the team be open to a brief demonstration?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"
+},
+{state:"Kansas",certified:350,medicaid:true,priority:"hot",
+whyHere:"HOME STATE. KDADS manages THREE separate peer certification tracks: Certified Peer Specialist (MH), Certified Peer Mentor (SUD), and Certified Parent Peer Support Specialist. Training coordinated through Wichita State University Community Engagement Institute. Two-part certification (online Level 1 + in-person Level 2) offered 4x/year. KDADS committed to 'growing and strengthening the Peer Workforce.' Block grant funds available for peer technology. All trainings peer-developed. Forensic specialty track available.",
+whyPriority:"HOT because: (1) HOME STATE \u2014 BeePurple is based here, can do in-person demos and relationship building, (2) 3 separate peer tracks = 3x the documentation need, (3) KDADS explicitly committed to workforce growth = need tools to support that growth, (4) Wichita State University partnership = academic channel for adoption, (5) block grant funds authorized for health IT, (6) smaller certified base (350) means BeePurple could become THE standard tool before competitors enter, (7) Zac Wilson manages all 3 tracks = single point of contact.",
+nextSteps:"1. Contact Zac Wilson at KDADS \u2014 he manages ALL three peer certification tracks. Request in-person meeting in Topeka.\n2. Connect with Charles Bartlett who coordinates training with Wichita State \u2014 propose BeePurple Classic as training companion tool.\n3. Pitch KDADS on block grant funded pilot: equip next cohort of KCPS/KCPM/KCPPSS trainees with BeePurple Classic + Peer Field Navigator.\n4. Partner with Wichita State Community Engagement Institute on research study: peer documentation quality with vs without CRM tools.\n5. Attend Level 2 training sessions as observer/presenter to demo tools to peers in training.\n6. Target Families Together (KCPPSS partner) as parent peer distribution channel.",
+contacts:[
+{name:"Zac Wilson",role:"KDADS Peer Specialist Program Manager (all 3 tracks)",email:"Zac.Wilson@ks.gov",phone:"(785) 296-6495"},
+{name:"Charles Bartlett",role:"KDADS Training Coordinator / Wichita State Liaison",email:"charles.bartlett@ks.gov",phone:""},
+{name:"KDADS Parent Peer Team",role:"Parent Peer Support Specialist Program",email:"kdads.parentpeer@ks.gov",phone:""},
+{name:"KDADS Central Office",role:"Behavioral Health Services",email:"",phone:"(785) 296-6495"},
+],
+emailSubject:"Peer Documentation Technology for Kansas\u2019 Growing Peer Workforce \u2014 Local Company, Purpose-Built Solution",
+bpFeatures:[
+{product:"BeePurple Classic",feature:"3-Track Peer Documentation",why:"Kansas has THREE separate cert tracks (KCPS for MH, KCPM for SUD, KCPPSS for Parents). BeePurple Classic supports documentation for all three with mobile encounter logging, recovery plan tracking, and scheduling from any device."},
+{product:"Peer Field Navigator",feature:"Kansas Credential & Billing Deep Dive",why:"The ONLY tool where all three KDADS peer tracks \u2014 KCPS, KCPM, KCPPSS, plus Forensic Specialty \u2014 are mapped with billing eligibility, training hours, supervision requirements, and Medicaid rates. Also shows how KS credentials compare to all 49 other states."},
+{product:"Addiction Field Navigator",feature:"Kansas Addiction Counselor Credentials",why:"Maps KDADS\u2019 full addiction counselor landscape alongside peer tracks. Shows billing codes, payer data, and the career ladder from peer mentor to clinical counselor for workforce planning. All in one tool for the first time."},
+{product:"BeePurple Classic",feature:"Scheduling & Capacity Management",why:"KDADS requires 90 days supervised in-training before Level 2. BeePurple tracks scheduling, supervision hours, and capacity for training cohorts."},
+{product:"BeePurple Classic",feature:"Recovery Plans & Pathways",why:"Individualized recovery plans aligned to real-world services \u2014 exactly what KCPS/KCPM deliver. Digital plans replace paper goal-setting documents."},
+{product:"BeePurple State",feature:"Harm Reduction Supply Management",why:"Kansas distributes Naloxone through peer networks. BeePurple State provides real-time monitoring of kit distribution with granular location data."},
+{product:"KitKeeper",feature:"Free Naloxone Tracking",why:"Complementary free tool for tracking Naloxone/NRT kit distribution across Kansas peer programs."}
+],
+emailBody:"Dear Zac,\n\nI\u2019m reaching out from BeePurple, a Kansas-based technology company in Wichita. We\u2019ve built two tools specifically relevant to the peer workforce you manage:\n\n1. BeePurple Classic \u2014 our Recovery Center CRM with mobile documentation for KCPS, KCPM, and KCPPSS peers. Tracks encounters, recovery plans, supervision hours, and generates billable service records. Already deployed at Healing Transitions in NC.\n\n2. The Peer Field Navigator \u2014 the first and only reference tool where all three KDADS peer certification tracks are mapped with billing codes, training requirements, and Medicaid rates \u2014 alongside every other state for comparison.\n\nAs a fellow Kansas organization, we\u2019d love to meet in person in Topeka to demonstrate both. Would you be open to a brief meeting?\n\nWarm regards,\nBeePurple Team\nWichita, Kansas\nhttps://beepurple.com"
+},
+{state:"North Carolina",certified:6000,medicaid:true,priority:"hot",
+whyHere:"CASE STUDY STATE \u2014 Healing Transitions in Raleigh already uses BeePurple for peer documentation. NC has 6,000+ Certified Peer Support Specialists (CPSS) statewide. NCDHHS DMH/DD/SUS runs the program. UNC manages the NCCPSS certification program. NC-HOPE provides 50-hour training across Raleigh, Charlotte, Chapel Hill with sessions nearly every month. Developing specialized tracks for Trauma, LGBTQIA+, Justice-Involved, and Crisis. Opioid settlement funds ($750M+) actively being used to fund peer certification scholarships (e.g., Johnston County). NC One Community in Recovery Conference March 4-6, 2026.",
+whyPriority:"HOT because: (1) EXISTING CUSTOMER \u2014 Healing Transitions is the proof point, (2) 6,000+ certified peers = largest state workforce after CA, (3) opioid settlement funds actively paying for peer scholarships = wave of newly certified peers incoming, (4) NC One Community in Recovery Conference March 4-6, 2026 = IMMINENT opportunity, (5) NCDHHS actively building specialized tracks = each new track means new documentation needs, (6) Statewide Peer Warmline (1-855-PEERS NC) shows strong peer infrastructure to plug into.",
+nextSteps:"1. Use Healing Transitions case study as door-opener for every NC contact.\n2. Attend/present at NC One Community in Recovery Conference (March 4-6, 2026) \u2014 THIS IS NEXT WEEK.\n3. Contact DMHPeerSupport@dhhs.nc.gov to discuss statewide BeePurple Classic adoption.\n4. Partner with NC-HOPE training program to integrate BeePurple tools into 50-hour certification training curriculum.\n5. Target Johnston County and other counties using opioid settlement funds for peer scholarships \u2014 bundle tech with training.\n6. Connect with Trillium Health Resources as LME/MCO distribution partner.",
+contacts:[
+{name:"NC DHHS Peer Support Team",role:"Statewide Peer Program Management",email:"DMHPeerSupport@dhhs.nc.gov",phone:""},
+{name:"NCCPSS Program (UNC)",role:"Certification Administration",email:"NCCPSSProgram@unc.edu",phone:""},
+{name:"NC-HOPE Training",role:"50-Hour CPSS Training Provider",email:"",phone:"(919) 809-7101"},
+{name:"Mary Banks",role:"Johnston County Opioid Grant Coordinator",email:"Mary.Banks@johnstonnc.gov",phone:"(919) 989-5203"},
+],
+emailSubject:"Peer Documentation Success at Healing Transitions \u2014 Expanding to North Carolina\u2019s 6,000+ Certified Peer Support Specialists",
+bpFeatures:[
+{product:"BeePurple Classic",feature:"CPSS Mobile Documentation (PROVEN IN NC)",why:"Healing Transitions in Raleigh ALREADY uses BeePurple Classic for their Rapid Responder Program. Documented results: comprehensive documentation, efficient scheduling, progress tracking, data-driven insights. This is proven, not theoretical."},
+{product:"Peer Field Navigator",feature:"NC Credential & Billing Reference",why:"The ONLY tool where NC\u2019s CPSS certification requirements, H0038 billing codes (with HK U4 modifier for Peer Bridgers), training hour requirements, and Medicaid rates exist alongside all 49 other states. Essential for the 6,000+ CPSS and their supervisors."},
+{product:"Addiction Field Navigator",feature:"NC Addiction Counselor Credentials",why:"Maps NC\u2019s full NCSAPPB credential landscape \u2014 LCAS, CADC, CCS, and more \u2014 with billing codes, payer data, and career pathways from peer to clinical roles. The only place all this NC data exists in one tool."},
+{product:"BeePurple State",feature:"Statewide & Regional Dashboards",why:"NC DHHS and LME/MCOs need aggregated data across all regions. BeePurple State provides state-level oversight of peer program performance metrics."},
+{product:"BeePurple Classic",feature:"Admissions & Referrals",why:"NC CPSS provide referral tracking, post-crisis follow-up, and community reintegration support. BeePurple tracks referrals, faster intake decisions, and placement visibility."},
+{product:"BeePurple State",feature:"Participant Satisfaction & Feedback",why:"NC is developing specialized tracks (Trauma, LGBTQIA+, Justice-Involved). Automated feedback collection helps measure effectiveness of each new track."},
+{product:"KitKeeper",feature:"Naloxone/NRT Kit Tracking",why:"NC opioid settlement funds are actively being used for harm reduction. KitKeeper tracks distribution with demographic data for reporting to county opioid committees."}
+],
+emailBody:"Dear NC DHHS Peer Support Team,\n\nI\u2019m writing to share results from a technology deployment already underway in North Carolina \u2014 and to explore expanding it statewide.\n\nHealing Transitions in Raleigh is currently using BeePurple Classic for peer specialist documentation \u2014 encounter tracking, recovery plans, scheduling, and impact reporting from any mobile device.\n\nWe also offer the Peer Field Navigator \u2014 the first and only reference tool where NC\u2019s CPSS certification requirements, H0038 billing codes (including HK U4 for Peer Bridgers), and Medicaid rates are mapped alongside all 49 other states. No other resource compiles this data.\n\nWith 6,000+ CPSS certified and new specialized tracks in development, we\u2019d welcome the opportunity to present results and discuss statewide adoption. We\u2019ll be available around the NC One Community in Recovery Conference (March 4-6). Would a brief call work?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"
+},
+{state:"Ohio",certified:2500,medicaid:true,priority:"high",
+whyHere:"OhioMHAS manages certification through new eLicensing platform (launched April 2022). Five Peer Technical Assistance Centers (PTACs) staffed by certified peers. OhioPRO coordinates statewide peer workforce development. Adding NEW certification categories: Family Peer Support and Youth Peer Support. Exploring transfer of certification to professional licensing board (RFP issued). 40-hour PRS training hosted statewide. $1B+ opioid settlement through OneOhio Foundation with explicit tech infrastructure funding. E-Based Academy transitioning to Ohio Learn platform Feb 2026.",
+whyPriority:"HIGH because: (1) new certification categories (Family, Youth) = new peer populations needing tools, (2) $1B+ OneOhio settlement with tech earmark, (3) eLicensing platform transition = they\u2019re already modernizing and open to tech, (4) 5 PTACs are natural distribution partners, (5) exploring certification transfer to licensing board = major system change where tech partner would be valuable, (6) 2,500+ certified base is substantial.",
+nextSteps:"1. Contact Michael Krause at OhioPRO \u2014 he coordinates all 5 PTACs and statewide peer workforce development.\n2. Pitch BeePurple Classic + Peer Field Navigator to The P.E.E.R. Center (Columbus) as flagship PTAC partner.\n3. Target OneOhio Foundation for tech infrastructure funding to equip peers statewide.\n4. Present at Ohio Council of Behavioral Health annual conference.\n5. Connect with OhioMHAS during their certification board transition RFP process as technology partner.",
+contacts:[
+{name:"Michael J. Krause",role:"Executive Director, OhioPRO",email:"mkrause@ohio-pro.com",phone:""},
+{name:"Gary Krafthefer",role:"The P.E.E.R. Center (Columbus PTAC)",email:"gkrafthefer@thepeercenter.org",phone:"(614) 453-4841"},
+{name:"Emily Werner",role:"Sandusky Artisans PTAC",email:"ehubsupport@artisansrecovery.org",phone:"(419) 901-6558"},
+{name:"Ashley Smithson",role:"Goodwill Easter Seals PTAC",email:"certificationassistancehub@gesmv.org",phone:"(937) 528-6399"},
+{name:"OneOhio Foundation",role:"Opioid Settlement Tech Funding",email:"info@oneohiorecovery.org",phone:""},
+],
+emailSubject:"Mobile Documentation for Ohio\u2019s Expanding Peer Recovery Supporter Workforce",
+bpFeatures:[
+{product:"BeePurple Classic",feature:"Multi-Category Peer Documentation",why:"Ohio is adding Family Peer Support and Youth Peer Support certifications alongside adult PRS. BeePurple Classic handles documentation for all categories from one mobile-responsive platform."},
+{product:"Peer Field Navigator",feature:"Ohio Credential & Billing Reference",why:"The ONLY tool where all OhioMHAS peer certification pathways \u2014 adult, family, youth \u2014 are mapped with eLicensing requirements, billing codes, CEU requirements, and 50-state comparison data. Essential as Ohio adds new cert categories."},
+{product:"Addiction Field Navigator",feature:"Ohio Addiction Counselor Credentials",why:"Maps Ohio\u2019s full addiction counselor credentialing landscape alongside peer tracks \u2014 billing codes, payer data, E-Based Academy requirements, and career ladder to clinical roles. All in one tool for the first time."},
+{product:"BeePurple Classic",feature:"Workflow Automation",why:"Ohio\u2019s 5 PTACs coordinate training, certification, and workforce development across the state. Automated tasks, alerts, and follow-ups reduce admin overhead."},
+{product:"BeePurple State",feature:"Recovery Capital & Outcome Measurement",why:"OneOhio Foundation requires outcome data for settlement-funded programs. BeePurple State tracks BARC-10 scores and recovery capital metrics systematically."},
+{product:"BeePurple Classic",feature:"Peer & Case Management",why:"Full tracking of peer support encounters, housing, employment, and benefits \u2014 exactly what Ohio\u2019s 2,500+ certified peers document daily."},
+{product:"KitKeeper",feature:"Naloxone Tracking",why:"Ohio\u2019s $1B+ settlement prioritizes harm reduction. KitKeeper provides free Naloxone distribution tracking."}
+],
+emailBody:"Dear Michael,\n\nI\u2019m reaching out because OhioPRO\u2019s work coordinating Ohio\u2019s Peer Technical Assistance Centers is exactly the kind of infrastructure that would benefit from two tools we\u2019ve built:\n\n1. BeePurple Classic \u2014 our Recovery Center CRM that lets certified peers document encounters from any device, track recovery journeys, and generate Medicaid-compliant reports. Already deployed at Healing Transitions in NC.\n\n2. The Peer Field Navigator \u2014 the first and only reference tool where all OhioMHAS peer certification pathways (including the new Family and Youth categories) are mapped with billing codes, eLicensing requirements, and 50-state comparison data.\n\nWe\u2019d love to discuss a pilot through one of the five PTACs. Would you be open to a conversation?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"
+},
+{state:"Texas",certified:3000,medicaid:true,priority:"high",
+whyHere:"HB 1486 (2017) created Medicaid peer services benefit and career ladder. HHSC manages policy; Texas Certification Board (TCB) handles credentialing. PeerForce is the state-funded peer workforce support hub. Training through independent Certified Training Entities across the state. Two cert paths: Mental Health Peer Specialist (MHPS) and Recovery Support Peer Specialist (RSPS). 19.5-hour Core training + supplemental. 250 hours supervised experience required. Massive geographic spread with rural areas completely lacking tech tools.",
+whyPriority:"HIGH because: (1) 3,000+ certified = second largest workforce, (2) built-in career ladder means peers advancing to supervisors = need better tools, (3) PeerForce hub is a ready-made distribution channel, (4) vast rural areas with zero tech infrastructure for peers, (5) multiple training entities = multiple entry points for partnership, (6) Recovery Resource Council, Council on Recovery (Houston), RecoveryPeople all actively training new cohorts in 2026.",
+nextSteps:"1. Contact PeerForce as state-funded workforce hub \u2014 propose listing BeePurple Classic + Peer Field Navigator as recommended technology resources.\n2. Pitch HHSC Peer and Recovery Services Programs unit on statewide tech adoption.\n3. Partner with Recovery Resource Council and Council on Recovery (Houston) as training entity distribution partners.\n4. Target rural Texas communities where peers have no documentation infrastructure.\n5. Present at Texas Council of Community Centers annual conference.",
+contacts:[
+{name:"PeerForce",role:"State Peer Workforce Development Hub",email:"info@peerforce.org",phone:""},
+{name:"HHSC Peer Services",role:"State Policy & Program Unit",email:"PeerServices@hhs.texas.gov",phone:""},
+{name:"Texas Certification Board",role:"Credentialing Body",email:"info@tcbap.org",phone:""},
+{name:"Council on Recovery (Houston)",role:"Training Entity",email:"",phone:""},
+],
+emailSubject:"Purpose-Built Documentation for Texas\u2019 3,000+ Certified Peer Specialists",
+bpFeatures:[
+{product:"BeePurple Classic",feature:"Rural Mobile Documentation",why:"Texas has vast rural areas where peers work far from offices. BeePurple Classic\u2019s mobile-responsive platform lets peers capture encounters from any location on any device."},
+{product:"Peer Field Navigator",feature:"TX Dual-Path Credential & Billing Reference",why:"The ONLY tool where both TX cert paths (MHPS and RSPS) are mapped with TCB requirements, HHSC core training standards, billing codes, payer data, and 50-state comparison. Peers and supervisors can see exactly what\u2019s billable at what rate."},
+{product:"Addiction Field Navigator",feature:"TX Addiction Counselor Credentials",why:"Maps TX\u2019s full addiction counselor landscape alongside peer tracks. Shows the HB 1486 career ladder from peer to supervisor to clinical roles with billing implications at each level. All in one tool for the first time."},
+{product:"BeePurple Classic",feature:"250-Hour Supervised Experience Tracker",why:"New Texas peer specialists must complete 250 hours of supervised work before full certification. BeePurple Classic tracks these hours automatically."},
+{product:"BeePurple Classic",feature:"Peer & Case Management",why:"PeerForce emphasizes career ladder progression from peer to supervisor. BeePurple supports both roles with appropriate documentation workflows."},
+{product:"BeePurple Classic",feature:"State Funder & Grant Reporting",why:"HHSC requires standardized reporting from all Medicaid-billing peer specialists. BeePurple generates compliant reports automatically."},
+{product:"KitKeeper",feature:"Naloxone Distribution",why:"Texas opioid crisis response includes Naloxone distribution through peer networks. Free tracking tool."}
+],
+emailBody:"Dear PeerForce Team,\n\nAs Texas\u2019s peer specialist workforce development hub, you\u2019re uniquely positioned to help the state\u2019s 3,000+ certified peers access tools they need.\n\nWe\u2019d like to introduce two resources:\n\n1. BeePurple Classic \u2014 our Recovery Center CRM with mobile documentation, 250-hour supervised experience tracking, and Medicaid-compliant reporting. Already deployed at Healing Transitions in NC.\n\n2. The Peer Field Navigator \u2014 the first and only reference where both TX cert paths (MHPS and RSPS) are mapped with TCB requirements, billing codes, payer data, and 50-state comparison. No other resource compiles this.\n\nCould we explore being listed on PeerForce as a recommended resource? A 15-minute call would be wonderful.\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"
+},
+{state:"Florida",certified:1800,medicaid:true,priority:"high",
+whyHere:"Florida Certification Board (FCB) manages all peer credentialing. Certified Recovery Peer Specialist (CRPS) with four endorsement categories: Adult (CRPS-A), Family (CRPS-F), Youth (CRPS-Y), and Veteran (CRPS-V). Peer Support Coalition of Florida (PSCFL) provides training, CEUs, and job board. Services billable through both DCF and Medicaid. Provisional certification (CRPS-P) allows 1-year practice while pursuing full cert. 40 hours training + Whole Health component (WRAP/WHAM). Managing Entities (MEs) like Broward Behavioral Health Coalition oversee regional implementation.",
+whyPriority:"HIGH because: (1) $1.5B+ opioid settlement = largest state allocation, county-driven decisions mean multiple entry points, (2) 4 endorsement categories = diverse peer populations needing documentation, (3) PSCFL training calendar and job board = ready distribution channel, (4) provisional certification path means peers start working before fully certified = need tools immediately, (5) Managing Entity structure means regional decision-makers who can adopt tools independently.",
+nextSteps:"1. Contact Peer Support Coalition of Florida about partnership \u2014 they train thousands and maintain the PLAFL course catalog.\n2. Pitch Florida Certification Board on listing BeePurple as approved technology resource.\n3. Target Managing Entities (Broward BHC, Southeast Florida BHN, etc.) for regional adoption.\n4. Connect with Elida Segrera at Broward Behavioral Health Coalition.\n5. Target county opioid settlement committees for tech funding.",
+contacts:[
+{name:"Peer Support Coalition of Florida",role:"Statewide Training & Advocacy",email:"info@peersupportfl.org",phone:""},
+{name:"Florida Certification Board",role:"Credentialing Body",email:"info@flcertificationboard.org",phone:"(850) 222-6314"},
+{name:"Elida Segrera",role:"Director of Operations, Broward BHC",email:"esegrera@bbhcflorida.org",phone:""},
+{name:"Fresh Start of Miami-Dade",role:"Training Provider",email:"",phone:""},
+],
+emailSubject:"Mobile Documentation for Florida\u2019s 1,800+ Certified Recovery Peer Specialists",
+bpFeatures:[
+{product:"BeePurple Classic",feature:"4-Endorsement Peer Documentation",why:"Florida\u2019s CRPS has four endorsements (Adult, Family, Youth, Veteran). BeePurple Classic supports documentation workflows for all four from one mobile-responsive platform."},
+{product:"Peer Field Navigator",feature:"FL FCB Credential & Billing Reference",why:"The ONLY tool where all FCB credential pathways \u2014 CRPS with all four endorsements, plus CRSS \u2014 are mapped with billing codes, Whole Health training requirements (WRAP/WHAM), and 50-state comparison data."},
+{product:"Addiction Field Navigator",feature:"FL Addiction Counselor Credentials",why:"Maps FL\u2019s full addiction counselor credentialing landscape alongside peer tracks. Shows billing codes through both DCF and Medicaid, plus career ladder from peer to clinical roles. All in one tool for the first time."},
+{product:"BeePurple Classic",feature:"Outcomes & Impact Reporting",why:"DCF and Medicaid require documentation of services provided by CRPS. BeePurple generates compliant dashboards for engagement, retention, and program effectiveness."},
+{product:"BeePurple State",feature:"Integrated Referral & Navigation",why:"Managing Entities like Broward BHC coordinate referrals across regional networks. BeePurple State provides full visibility into referrals and warm handoffs."},
+{product:"KitKeeper",feature:"Naloxone/NRT Kit Tracking",why:"Florida\u2019s $1.5B settlement includes harm reduction. KitKeeper tracks distribution across counties for free."}
+],
+emailBody:"Dear Peer Support Coalition of Florida,\n\nSince 2016, PSCFL has trained thousands of peers and built the state\u2019s most comprehensive peer development infrastructure. We\u2019d like to introduce two complementary tools:\n\n1. BeePurple Classic \u2014 our Recovery Center CRM with mobile documentation for all four CRPS endorsement categories (Adult, Family, Youth, Veteran). Generates DCF and Medicaid-compliant service records. Already deployed at Healing Transitions in NC.\n\n2. The Peer Field Navigator \u2014 the first and only reference where all FCB credential pathways are mapped with billing codes, Whole Health training requirements, and 50-state comparison data.\n\nCould we explore adding these to the PLAFL course catalog as recommended technology resources? A 15-minute call would be wonderful.\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"
+},
+{state:"Pennsylvania",certified:2200,medicaid:true,priority:"high",
+whyHere:"Pennsylvania has one of the most mature peer support programs in the country. OMHSAS manages Certified Peer Specialist (CPS) credentials. RI International provides core training. Active CCBHC expansion including Merakey in Kensington (Philadelphia) serving one of the hardest-hit opioid communities in America. Strong Medicaid reimbursement for peer services. Peer-run organizations like Mental Health Partnerships and Pennsylvania Peer Support Coalition provide workforce development.",
+whyPriority:"HIGH because: (1) 2,200+ certified = large established workforce, (2) Merakey Kensington CCBHC = high-profile opportunity in epicenter of opioid crisis, (3) mature program means peers are ready for technology upgrades, (4) strong Medicaid reimbursement = sustainability for tech purchases, (5) active CCBHC expansion with federal funding requiring technology compliance.",
+nextSteps:"1. Target Merakey Kensington CCBHC as flagship PA opportunity.\n2. Contact OMHSAS peer specialist program about statewide technology partnership.\n3. Connect with Pennsylvania Peer Support Coalition for training integration.\n4. Pitch at Pennsylvania Community Providers Association (PCPA) conference.\n5. Target opioid settlement funding through county-level applications.",
+contacts:[
+{name:"PA OMHSAS Peer Support",role:"State Peer Certification",email:"ra-peersupport@pa.gov",phone:""},
+{name:"PA Peer Support Coalition",role:"Statewide Peer Advocacy",email:"info@papeersupportcoalition.org",phone:""},
+{name:"Merakey",role:"Kensington CCBHC",email:"",phone:""},
+],
+emailSubject:"Purpose-Built Peer Documentation Technology for Pennsylvania\u2019s 2,200+ Certified Peer Specialists",
+bpFeatures:[
+{product:"BeePurple Classic",feature:"CPS/CRS Mobile Documentation",why:"PA has separate MH Peer Specialist (CPS) and SUD Recovery Specialist (CRS) tracks. BeePurple Classic supports documentation for both from any mobile device."},
+{product:"Peer Field Navigator",feature:"PA PCB Credential & Billing Deep Dive",why:"PA has the most complex peer credential landscape in the country: CRS, CFRS, CPS(MH), CRSS supervisor, CCHW, and more. The Peer Field Navigator is the ONLY place where all PCB pathways are mapped with H0038 billing codes, HQ modifiers, essay requirements, and 50-state comparison."},
+{product:"Addiction Field Navigator",feature:"PA Addiction Counselor Credentials",why:"Maps PA\u2019s extensive PCB/IC&RC/NAADAC credential landscape \u2014 CAADC, CADC, CAAC, and more \u2014 with billing codes, payer data, and career pathways. The most complex state credentialing system in the country, all in one tool."},
+{product:"BeePurple Classic",feature:"CCBHC Compliance Reporting",why:"Merakey Kensington and other PA CCBHCs need integrated reporting across crisis, outpatient, and peer support services. BeePurple handles all CCBHC criteria."},
+{product:"BeePurple Classic",feature:"Peer & Case Management",why:"Full nonclinical recovery work tracking for housing, employment, transport, and benefits \u2014 exactly what PA\u2019s 2,200+ peers do daily."},
+{product:"BeePurple Justice",feature:"Justice-Involved Peer Support",why:"PA has active drug courts and reentry programs. BeePurple Justice tracks participants through custody, treatment court, and community reentry with warm handoffs to peer teams."}
+],
+emailBody:"Dear Pennsylvania OMHSAS Peer Support Team,\n\nPennsylvania\u2019s Certified Peer Specialist program is one of the most established in the nation. We\u2019d like to introduce two tools built for this workforce:\n\n1. BeePurple Classic \u2014 our Recovery Center CRM with mobile documentation for both CPS and CRS peers, plus CCBHC compliance reporting for organizations like Merakey. Already deployed at Healing Transitions in NC.\n\n2. The Peer Field Navigator \u2014 PA has the most complex peer credential landscape in the country. Our Navigator is the ONLY place where all PCB pathways (CRS, CFRS, CPS, CRSS, CCHW) are mapped with billing codes, modifiers, essay requirements, and 50-state comparison.\n\nWould your team be open to a brief demonstration?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"
+},
+{state:"Tennessee",certified:700,medicaid:true,priority:"high",
+whyHere:"Tennessee Department of Mental Health and Substance Abuse Services (TDMHSAS) manages peer certification. Nashville is a behavioral health hub with Centerstone (multi-state CCBHC, 180K+ clients) headquartered there. RISE26 state initiative focused on recovery infrastructure. Centerstone actively employing peer specialists across multiple states. $800M+ opioid settlement in early distribution phase.",
+whyPriority:"HIGH because: (1) Centerstone HQ = massive multi-state CCBHC that employs peers across TN, IN, IL, FL, KY, (2) RISE26 state initiative creating new recovery infrastructure, (3) $800M+ settlement funds flowing, (4) Nashville emerging as behavioral health innovation hub, (5) capturing Centerstone could cascade to 5+ states.",
+nextSteps:"1. Target Centerstone as primary opportunity \u2014 their scale means one deal impacts multiple states.\n2. Contact TDMHSAS about statewide peer documentation standards.\n3. Leverage RISE26 initiative for technology funding.\n4. Target Nashville-based peer organizations as local partners.\n5. Present at Tennessee Association of Mental Health Organizations (TAMHO) conference.",
+contacts:[
+{name:"TDMHSAS Peer Support",role:"State Peer Certification",email:"OCA.TDMHSAS@tn.gov",phone:""},
+{name:"Marie Williams",role:"Commissioner, TDMHSAS",email:"marie.williams@tn.gov",phone:""},
+{name:"David C. Guth Jr.",role:"CEO, Centerstone",email:"",phone:""},
+],
+emailSubject:"Peer Documentation Technology for Tennessee\u2019s Recovery Workforce",
+bpFeatures:[
+{product:"BeePurple Classic",feature:"Centerstone-Scale Peer Documentation",why:"Centerstone employs peers across TN, IN, IL, FL, KY. One deal = multi-state BeePurple Classic deployment for hundreds of peers documenting encounters from mobile devices."},
+{product:"Peer Field Navigator",feature:"TN Credential & Billing Reference",why:"The ONLY tool where TDMHSAS certification requirements, billing codes, CEU needs, and Medicaid rates exist alongside all 49 other states. Essential for multi-state orgs like Centerstone comparing requirements across their footprint."},
+{product:"Addiction Field Navigator",feature:"TN Addiction Counselor Credentials",why:"Maps Tennessee\u2019s full addiction counselor landscape alongside peer tracks. Shows billing codes, payer data, and career pathways from peer to clinical roles across TDMHSAS and IC&RC/NAADAC pathways."},
+{product:"BeePurple Justice",feature:"Drug Court Pathways",why:"Nashville is a RISE26 hub. BeePurple Justice provides configurable drug court phases, milestones, judicial dashboards, and compliance tracking."},
+{product:"BeePurple Classic",feature:"Client Tracking Across Locations",why:"Centerstone serves 180,000+ clients across multiple states. BeePurple Classic\u2019s unified recovery records work across all locations with one participant record."}
+],
+emailBody:"Dear TDMHSAS Peer Support Team,\n\nAs Tennessee expands its peer specialist workforce through RISE26, we\u2019d like to introduce two tools built for this workforce:\n\n1. BeePurple Classic \u2014 our Recovery Center CRM with mobile documentation, CCBHC compliance reporting, and multi-state client tracking. A single deal with Centerstone = deployment across TN, IN, IL, FL, KY. Already deployed at Healing Transitions in NC.\n\n2. The Peer Field Navigator \u2014 the first and only reference where TDMHSAS certification requirements, billing codes, and payer data exist alongside all 49 other states. Essential for multi-state orgs comparing requirements across their footprint.\n\nWould 15 minutes work to discuss how these could support Tennessee\u2019s peer workforce?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"
+},
+{state:"Washington",certified:800,medicaid:true,priority:"high",
+whyHere:"Washington is transitioning from Certified Peer Counselor (CPC) to Certified Peer Support Specialist (CPSS) credential by January 2027. Health Care Authority (HCA) manages the program. Active crisis peer training initiatives. Strong Medicaid reimbursement. King County and Seattle-area behavioral health organizations driving demand. Recovery Navigator Program in multiple counties.",
+whyPriority:"HIGH because: (1) credential transition to CPSS by Jan 2027 = every peer re-engaging with the system, (2) crisis peer training = new specialty requiring documentation tools, (3) Recovery Navigator Programs expanding in multiple counties = new peer roles being created, (4) progressive state likely to invest in peer technology, (5) 800+ certified base in tech-forward state receptive to mobile tools.",
+nextSteps:"1. Contact HCA peer services about technology partnership during CPSS transition.\n2. Target Recovery Navigator Programs in King County and Pierce County.\n3. Connect with Washington Recovery Alliance as statewide peer advocacy partner.\n4. Present to Washington Council for Behavioral Health.\n5. Time outreach to coincide with CPSS transition timeline.",
+contacts:[
+{name:"HCA Peer Services",role:"State Peer Certification",email:"peerservices@hca.wa.gov",phone:""},
+{name:"Washington Recovery Alliance",role:"Statewide Peer Advocacy",email:"info@washingtonrecoveryalliance.org",phone:""},
+],
+emailSubject:"Supporting Washington\u2019s CPC to CPSS Transition with Purpose-Built Peer Documentation",
+bpFeatures:[
+{product:"BeePurple Classic",feature:"CPSS Transition Documentation",why:"Every Washington peer is re-engaging with the system during the CPC to CPSS transition. Perfect moment to introduce BeePurple Classic as the mobile documentation tool for the new credential."},
+{product:"Peer Field Navigator",feature:"WA Credential Transition Reference",why:"The ONLY tool mapping Washington\u2019s new CPSS credential requirements alongside the old CPC \u2014 showing exactly what changes, what carries over, billing code updates, and how WA compares to all 49 other states."},
+{product:"BeePurple Classic",feature:"Crisis Peer Documentation",why:"Washington is launching crisis peer responder training. Crisis encounters require rapid, structured documentation that BeePurple Classic\u2019s mobile-responsive platform excels at."},
+{product:"Addiction Field Navigator",feature:"WA Addiction Counselor Credentials",why:"Maps Washington\u2019s full addiction counselor landscape alongside the peer tracks. Shows billing codes, payer data, and career ladder from peer to clinical roles. All in one tool for the first time."},
+{product:"BeePurple State",feature:"Statewide Management Dashboards",why:"HCA needs aggregated data across all counties implementing the CPSS credential. BeePurple State provides state-level oversight and regional performance metrics."}
+],
+emailBody:"Dear HCA Peer Services Team,\n\nAs Washington transitions from Certified Peer Counselor to Certified Peer Support Specialist by January 2027, this is an ideal moment to equip your peer workforce with two purpose-built tools:\n\n1. BeePurple Classic \u2014 our Recovery Center CRM with mobile documentation for Recovery Navigator Programs and crisis peer encounters. Generates Medicaid-compliant service records. Already deployed at Healing Transitions in NC.\n\n2. The Peer Field Navigator \u2014 the first and only reference tool mapping Washington\u2019s new CPSS credential requirements alongside the old CPC, showing what changes, what carries over, and how WA compares to all 49 other states.\n\nWould a brief call work to discuss supporting the CPSS transition?\n\nWarm regards,\nBeePurple Team\nhttps://beepurple.com"
+},
+];
+var SETTLE=[
+{state:"North Carolina",funds:"$750M+",tech:"Yes",status:"Distributing",dm:"Dave Richard",contact:"dave.richard@dhhs.nc.gov",note:"Case study state. Tech spending permitted.",priority:"hot"},
+{state:"Kansas",funds:"$200M+",tech:"Pending",status:"Early",dm:"Laura Howard",contact:"laura.howard@ks.gov",note:"HOME STATE. Position before allocation.",priority:"hot"},
+{state:"Oklahoma",funds:"$500M+",tech:"Yes",status:"Active",dm:"Allie Friesen",contact:"afriesen@odmhsas.org",note:"200+ org network. Active tech spend.",priority:"hot"},
+{state:"Ohio",funds:"$1B+",tech:"Yes",status:"Active",dm:"OneOhio Foundation",contact:"info@oneohiorecovery.org",note:"Explicit tech infrastructure category.",priority:"hot"},
+{state:"Florida",funds:"$1.5B+",tech:"Varies",status:"County-driven",dm:"County committees",contact:"Multiple",note:"Largest allocation. County decisions.",priority:"high"},
+{state:"Tennessee",funds:"$800M+",tech:"Pending",status:"Early",dm:"Marie Williams",contact:"marie.williams@tn.gov",note:"RISE26 state. Funds flowing.",priority:"high"},
+{state:"West Virginia",funds:"$900M+",tech:"Yes",status:"Active",dm:"WV Dept Health",contact:"State opioid office",note:"Highest per-capita impact. Rural need.",priority:"high"},
+{state:"New York",funds:"$2.7B+",tech:"Yes",status:"Active",dm:"OASAS",contact:"Via NY OASAS",note:"Largest raw allocation.",priority:"high"},
+];
+
+function AwardsTab({awards,emailStatus,toggleEmail}){
+  var[pf,setPf]=useState("all");
+  var[expanded,setExpanded]=useState(null);
+  var[copied,setCopied]=useState("");
+  var types=["all","ccbhc","peer_org","state_doh","recovery_house"];
+  var typeLabels={ccbhc:"CCBHC",peer_org:"Peer/RCO",state_doh:"State Agency",recovery_house:"Recovery Housing"};
+  var filtered=awards.filter(function(a){return pf==="all"||a.icpType===pf;}).sort(function(a,b){var p={hot:0,high:1,medium:2};return(p[a.fit]!==undefined?p[a.fit]:3)-(p[b.fit]!==undefined?p[b.fit]:3);});
+  var totalAmt=awards.length;
+  var hotCount=awards.filter(function(a){return a.fit==="hot";}).length;
+
+  function cp(text,label){try{navigator.clipboard.writeText(text);}catch(e){}setCopied(label);setTimeout(function(){setCopied("");},2000);}
+
+  function genEmail(a){
+    return "Subject: Technology Partner for "+a.org+" - "+a.program+" Program\n\nDear "+a.contact+",\n\nCongratulations on "+a.org+"'s "+a.program+" award ("+a.amount+"). I'm reaching out because your grant program requires technology capabilities that BeePurple delivers as a purpose-built Recovery Center CRM.\n\nSpecifically, your "+a.program+" program needs:\n"+a.needs.map(function(n){return"- "+n;}).join("\n")+"\n\nBeePurple provides all of these through a single HIPAA-compliant, SOC 2 Type II certified platform. We're already deployed with organizations like Healing Transitions (Raleigh, NC), whose Rapid Responder Program case study demonstrates measurable improvements in client engagement and data-driven outcomes.\n\nKey advantages for "+a.org+":\n- Purpose-built for recovery/behavioral health (not generic like Salesforce or Apricot)\n- Mobile-responsive for field workers and peer specialists\n- Built-in reporting for SAMHSA GPRA/NOMS compliance\n- Implementation in 6-8 weeks, not months\n- Priced for nonprofit sustainability\n\nI'd welcome 15 minutes to show you how BeePurple can support your "+a.program+" program requirements. Would this week or next work?\n\nWarm regards,\n\nBeePurple Team\nhttps://beepurple.com | https://get.beepurple.com\nHIPAA Compliant | SOC 2 Type II Certified";
+  }
+
+  return <div style={{display:"flex",flexDirection:"column",gap:12}}>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(130px, 1fr))",gap:8}}>
+      <SC label="Total Awardees" value={totalAmt} color={C.tl}/><SC label="Hot Opportunities" value={hotCount} color={C.ht}/><SC label="CCBHCs" value={awards.filter(function(a){return a.icpType==="ccbhc";}).length} color={C.pl}/><SC label="RCOs/Peers" value={awards.filter(function(a){return a.icpType==="peer_org";}).length} color={C.gd}/><SC label="State Agencies" value={awards.filter(function(a){return a.icpType==="state_doh";}).length} color={C.ok}/>
     </div>
-    {f.length === 0 ? <Empty icon="📭" msg="No RFPs match filters" /> : f.map(r => (
-      <Card key={r.id} onClick={() => onSelect(r)} style={{ cursor: "pointer", borderLeftWidth: 3, borderLeftColor: r.angle === "beepurple" ? C.purple : C.gold }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 8, marginBottom: 8 }}>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}><AB a={r.angle} /><SB s={r.status} />{r.verified ? <B bg="rgba(92,192,126,0.15)" fg={C.ok}>✓ VERIFIED</B> : null}</div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}><FB s={r.fit_score || 0} /><DU d={r.deadline} /></div>
-        </div>
-        <h3 style={{ margin: "0 0 4px", fontSize: 15, fontWeight: 700, color: C.text }}>{r.title}</h3>
-        <p style={{ margin: "0 0 6px", fontSize: 12, color: C.textMuted }}>{r.agency} • {r.state}</p>
-        <p style={{ margin: "0 0 8px", fontSize: 13, color: C.text, lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{r.overview}</p>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: C.ok }}>{r.amount}</span>
-          {r.source_url && <a href={r.source_url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()} style={{ fontSize: 12, color: C.teal, textDecoration: "underline" }}>Source →</a>}
-        </div>
-      </Card>
-    ))}
-  </div>;
-}
-
-function LeadsTab({ leads }) {
-  const [tf, setTf] = useState("all");
-  const [pf, setPf] = useState("all");
-  const types = ["all", "job_signal", "award", "settlement", "new_org"];
-  const f = useMemo(() => leads.filter(l => (tf === "all" || l.type === tf) && (pf === "all" || l.priority === pf) && l.type !== "contact" && l.type !== "competitor").sort((a, b) => ({ hot: 0, high: 1, medium: 2, low: 3 }[a.priority] || 3) - ({ hot: 0, high: 1, medium: 2, low: 3 }[b.priority] || 3)), [leads, tf, pf]);
-  const st = useMemo(() => ({ hot: leads.filter(l => l.priority === "hot").length, jobs: leads.filter(l => l.type === "job_signal").length, awards: leads.filter(l => l.type === "award").length, settlements: leads.filter(l => l.type === "settlement").length, newOrgs: leads.filter(l => l.type === "new_org").length }), [leads]);
-  return <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: 8 }}>
-      <SC label="🔥 Hot" value={st.hot} color={C.hot} /><SC label="📋 Excel" value={st.jobs} color={C.warn} /><SC label="💰 Awards" value={st.awards} color={C.ok} /><SC label="⚖️ Settlement" value={st.settlements} color={C.gold} /><SC label="🌱 New Orgs" value={st.newOrgs} color={C.teal} />
+    <div style={{padding:"10px 14px",background:"rgba(232,169,77,0.08)",borderRadius:8,borderLeft:"3px solid "+C.wn}}>
+      <p style={{margin:0,fontSize:12,color:C.wn,fontWeight:600}}>Data sourced from SAMHSA grants dashboard, CCBHC expansion program, BCR awards, SOR/Block Grant allocations. Each org below has active federal funding and needs technology.</p>
     </div>
-    <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-      <span style={{ fontSize: 11, fontWeight: 600, color: C.textDim }}>Type:</span>
-      {types.map(t => <Chip key={t} active={tf === t} onClick={() => setTf(t)}>{t === "all" ? "All" : (LTYPES[t]?.icon || "") + " " + (LTYPES[t]?.l || t)}</Chip>)}
-      <span style={{ width: 1, height: 20, background: C.border }} />
-      {["all", "hot", "high", "medium"].map(p => <Chip key={p} active={pf === p} onClick={() => setPf(p)}>{p === "all" ? "All" : (PRIO[p]?.icon || "") + " " + (PRIO[p]?.l || p)}</Chip>)}
-    </div>
-    {f.length === 0 ? <Empty icon="🎯" msg="No leads match filters" /> : f.map(l => (
-      <Card key={l.id} style={{ borderLeftWidth: 3, borderLeftColor: PRIO[l.priority]?.fg || C.border }}>
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}><TB t={l.type} /><PB p={l.priority} /></div>
-        <h3 style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 700, color: C.text }}>{l.title}</h3>
-        {l.org_name && l.org_name !== "Multiple organizations" && <p style={{ margin: "0 0 4px", fontSize: 12, color: C.textMuted }}>{l.org_name}{l.state ? " • " + l.state : ""}</p>}
-        <p style={{ margin: "0 0 6px", fontSize: 12, color: C.text, lineHeight: 1.5 }}>{l.signal}</p>
-        {l.details && <p style={{ margin: "0 0 6px", fontSize: 11, color: C.textDim, lineHeight: 1.4 }}>{(l.details || "").substring(0, 300)}{l.details?.length > 300 ? "..." : ""}</p>}
-        {l.contact_name && <p style={{ margin: "0 0 4px", fontSize: 12, color: C.teal }}>👤 {l.contact_name}{l.contact_title ? " — " + l.contact_title : ""}</p>}
-        {l.source_url && <a href={l.source_url} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: C.teal, textDecoration: "underline" }}>View →</a>}
-      </Card>
-    ))}
-  </div>;
-}
-
-function ContactsTab({ leads }) {
-  const contacts = useMemo(() => leads.filter(l => l.type === "contact").sort((a, b) => ({ hot: 0, high: 1, medium: 2, low: 3 }[a.priority] || 3) - ({ hot: 0, high: 1, medium: 2, low: 3 }[b.priority] || 3)), [leads]);
-  const [f, setF] = useState("all");
-  const types = ["all", "state_doh", "recovery_center", "peer_org", "ccbhc", "court", "recovery_house"];
-  const fil = useMemo(() => contacts.filter(c => f === "all" || c.org_type === f), [contacts, f]);
-  return <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>{types.map(t => <Chip key={t} active={f === t} onClick={() => setF(t)}>{t === "all" ? "All" : BP.icpTypes.find(i => i.id === t)?.label || t}</Chip>)}</div>
-    {fil.length === 0 ? <Empty icon="👤" msg="No contacts found" /> : <div style={{ overflowX: "auto" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: ff, fontSize: 12 }}>
-        <thead><tr>{["Priority", "Name", "Title", "Organization", "State", "Type", "Signal", "Action"].map(h => <th key={h} style={{ padding: "10px 8px", textAlign: "left", fontSize: 10, fontWeight: 700, textTransform: "uppercase", color: C.textMuted, borderBottom: "1px solid " + C.border, whiteSpace: "nowrap" }}>{h}</th>)}</tr></thead>
-        <tbody>{fil.map(c => <tr key={c.id} style={{ borderBottom: "1px solid " + C.border }}>
-          <td style={{ padding: 8 }}><PB p={c.priority} /></td>
-          <td style={{ padding: 8, color: C.text, fontWeight: 600 }}>{c.contact_name || "—"}</td>
-          <td style={{ padding: 8, color: C.textMuted, fontSize: 11 }}>{c.contact_title || "—"}</td>
-          <td style={{ padding: 8, color: C.goldLight, fontWeight: 600 }}>{c.org_name}</td>
-          <td style={{ padding: 8, color: C.textMuted }}>{c.state}</td>
-          <td style={{ padding: 8 }}><B bg={C.purpleDim} fg={C.purpleLight}>{BP.icpTypes.find(i => i.id === c.org_type)?.label || c.org_type}</B></td>
-          <td style={{ padding: 8, color: C.text, fontSize: 11, maxWidth: 200 }}>{(c.signal || "").substring(0, 60)}</td>
-          <td style={{ padding: 8 }}>{c.source_url && <a href={c.source_url} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: C.teal }}>LinkedIn →</a>}</td>
-        </tr>)}</tbody>
-      </table>
-    </div>}
-  </div>;
-}
-
-function CompetitorsTab({ leads }) {
-  const c = useMemo(() => leads.filter(l => l.type === "competitor"), [leads]);
-  return <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-    {c.length === 0 ? <Empty icon="🔄" msg="No competitor signals" /> : c.map(l => (
-      <Card key={l.id} style={{ borderLeftWidth: 3, borderLeftColor: C.purple }}>
-        <div style={{ display: "flex", gap: 6, marginBottom: 8 }}><TB t="competitor" /><PB p={l.priority} /></div>
-        <h3 style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 700, color: C.text }}>{l.title}</h3>
-        <p style={{ margin: "0 0 8px", fontSize: 12, color: C.text, lineHeight: 1.6 }}>{l.signal}</p>
-        <p style={{ margin: "0 0 8px", fontSize: 11, color: C.textDim, lineHeight: 1.5, whiteSpace: "pre-wrap" }}>{l.details}</p>
-        {l.source_url && <a href={l.source_url} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: C.teal, textDecoration: "underline" }}>Search signals →</a>}
-      </Card>
-    ))}
-  </div>;
-}
-
-function EventsTab({ events }) {
-  return <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-    {events.length === 0 ? <Empty icon="📅" msg="No events loaded" /> : events.map(ev => {
-      const d = Math.ceil((new Date(ev.date_start) - new Date()) / 86400000);
-      const icps = jp(ev.icp_types);
-      return <Card key={ev.id}>
-        <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 8 }}>
-          <PB p={ev.priority} />
-          <B bg={d <= 30 ? "rgba(255,68,68,0.15)" : "rgba(77,184,168,0.15)"} fg={d <= 30 ? C.hot : C.teal}>{d <= 0 ? "NOW" : d + " days"}</B>
+    <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>{types.map(function(t){return <Chip key={t} active={pf===t} onClick={function(){setPf(t);}}>{t==="all"?"All":(typeLabels[t]||t)}</Chip>;})}</div>
+    {filtered.map(function(a){
+      var isExpanded=expanded===a.id;
+      var fc=a.fit==="hot"?C.ht:a.fit==="high"?C.wn:C.tl;
+      var email=genEmail(a);
+      return <Card key={a.id} style={{borderLeftWidth:3,borderLeftColor:fc,cursor:"pointer"}} onClick={function(){setExpanded(isExpanded?null:a.id);}}>
+        <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8,marginBottom:8}}>
+          <div style={{display:"flex",gap:6}}><Bd bg={fc+"22"} fg={fc}>{a.fit.toUpperCase()}</Bd><Bd bg={C.pm} fg={C.pl}>{typeLabels[a.icpType]||a.icpType}</Bd><Bd bg={C.tm} fg={C.tl}>{a.program}</Bd></div>
+          <span style={{fontSize:14,fontWeight:700,color:C.ok}}>{a.amount}</span>
         </div>
-        <h3 style={{ margin: "0 0 6px", fontSize: 16, fontWeight: 700, color: C.text }}>{ev.name}</h3>
-        <p style={{ margin: "0 0 6px", fontSize: 12, color: C.gold }}>📍 {ev.city || "TBD"}{ev.state && ev.state !== "TBD" ? ", " + ev.state : ""} · 📆 {new Date(ev.date_start).toLocaleDateString("en-US", { month: "long", day: "numeric" })}{ev.date_end ? " – " + new Date(ev.date_end).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : ""}</p>
-        <p style={{ margin: "0 0 8px", fontSize: 13, color: C.text, lineHeight: 1.6 }}>{ev.description}</p>
-        {icps.length > 0 && <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 8 }}>{icps.map(t => <B key={t} bg={C.purpleDim} fg={C.purpleLight}>{BP.icpTypes.find(i => i.id === t)?.label || t}</B>)}</div>}
-        {ev.url && <a href={ev.url} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: C.teal, textDecoration: "underline" }}>Event Website →</a>}
+        <h3 style={{margin:"0 0 4px",fontSize:15,fontWeight:700,color:C.tx}}>{a.org}</h3>
+        <p style={{margin:"0 0 4px",fontSize:12,color:C.mu}}>{a.city}, {a.state} | {a.fy} | Contact: {a.contact}, {a.title}</p>
+        {a.email&&<p style={{margin:"0 0 4px",fontSize:12}}><span style={{color:C.gd,fontWeight:600}}>{a.email}</span><EmailTag emailKey={a.email} emailStatus={emailStatus} toggleEmail={toggleEmail}/>{a.linkedin&&<>{" · "}<a href={a.linkedin} target="_blank" rel="noreferrer" style={{color:"#0A66C2",fontWeight:600,fontSize:11}} onClick={function(e){e.stopPropagation();}}>LinkedIn ↗</a></>}{a.emailNote&&<span style={{color:C.dm,fontSize:10}}>{" | "+a.emailNote}</span>}</p>}
+        <p style={{margin:"0 0 6px",fontSize:13,color:C.tx,lineHeight:1.5}}>{a.why}</p>
+
+        {isExpanded&&<div style={{marginTop:12,display:"flex",flexDirection:"column",gap:12}} onClick={function(e){e.stopPropagation();}}>
+          <div>
+            <p style={{fontSize:11,fontWeight:700,color:C.gd,textTransform:"uppercase",margin:"0 0 6px"}}>Technology Needs (BeePurple Match)</p>
+            {a.needs.map(function(n,i){return <div key={i} style={{display:"flex",alignItems:"center",gap:8,padding:"4px 0",fontSize:12,color:C.tx}}><span style={{color:C.ok}}>{"✓"}</span>{n}</div>;})}
+          </div>
+          <div>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+              <p style={{fontSize:11,fontWeight:700,color:C.gd,textTransform:"uppercase",margin:0}}>Ready-to-Send Email</p>
+              <button onClick={function(){cp(email,"em"+a.id);}} style={{padding:"4px 12px",borderRadius:6,border:"1px solid "+C.gd,background:C.gm,color:C.gl,fontSize:10,fontWeight:600,cursor:"pointer"}}>{copied==="em"+a.id?"Copied!":"Copy Email"}</button>
+            </div>
+            <pre style={{background:C.bg,borderRadius:8,padding:14,fontFamily:f,fontSize:11,color:C.tx,lineHeight:1.6,whiteSpace:"pre-wrap",border:"1px solid "+C.bd,maxHeight:300,overflow:"auto"}}>{email}</pre>
+          </div>
+        </div>}
+        {!isExpanded&&<p style={{margin:0,fontSize:11,color:C.tl}}>Click to expand: needs analysis + email template</p>}
       </Card>;
     })}
   </div>;
 }
+const KB=[
+{k:["hipaa","privacy","phi","baa","health information"],s:"HIPAA Compliance",r:"BeePurple is fully HIPAA-compliant, executing Business Associate Agreements (BAAs) with all clients. The platform enforces the Privacy Rule through role-based access controls, the Security Rule through AES-256 encryption at rest and TLS 1.2+ in transit, and includes comprehensive audit logging."},
+{k:["soc","security","audit","certification","cyber","breach","encryption"],s:"SOC 2 Type II & Security",r:"BeePurple holds SOC 2 Type II certification verified through annual independent audits. Security controls include AES-256 encryption at rest, TLS 1.2+ in transit, role-based access controls, multi-factor authentication, automated session timeouts, and regular penetration testing."},
+{k:["42 cfr","part 2","consent","substance use disorder","confidentiality"],s:"42 CFR Part 2",r:"BeePurple supports consent management workflows for 42 CFR Part 2 substance use disorder records, including granular consent tracking, expiration monitoring, and revocation capabilities."},
+{k:["client","participant","track","case management","intake","enrollment","profile","individual"],s:"Client Tracking",r:"BeePurple provides comprehensive individual-level tracking from intake through discharge. Each client profile consolidates demographics, assessments, service encounters, recovery milestones, treatment plans, and referrals in a single searchable interface with real-time documentation."},
+{k:["demographic","race","ethnicity","gender","cultural","population","spd 15"],s:"Demographics",r:"BeePurple's Demographic Profiles module collects data aligned with federal standards including revised SPD 15 categories: age, gender identity, race/ethnicity, housing status, employment, insurance, substance use history, and recovery milestones. Forms are customizable for culturally responsive standards."},
+{k:["outcome","report","impact","metric","analytic","dashboard","gpra","noms","evaluation","measure","performance","data"],s:"Impact Reporting",r:"BeePurple's Impact Reporting engine generates customizable reports for program impact, admissions, demographics, service utilization, and federal compliance metrics including SAMHSA GPRA/NOMS standards. Includes visual dashboards, trend analysis, and automated report scheduling. Exports to CSV, PDF, and Excel."},
+{k:["mobile","field","remote","outreach","community-based","smartphone","tablet"],s:"Mobile Access",r:"BeePurple is fully mobile-responsive for field workers, peer specialists, and outreach teams. Staff document interactions, complete assessments, and access profiles from any device browser without app installation, enabling real-time data capture during community outreach and home visits."},
+{k:["schedule","appointment","reminder","follow-up","notification","calendar"],s:"Scheduling",r:"BeePurple manages appointments, follow-up reminders, and automated notifications. Features include calendar management, configurable reminder cadences, missed appointment flagging, and recurring templates. Proven to improve retention at Healing Transitions."},
+{k:["naloxone","nrt","kit","inventory","harm reduction","supply"],s:"KitKeeper",r:"BeePurple's KitKeeper module tracks Naloxone and NRT kit inventory, distribution logging, recipient information, training verification, automated reorder alerts, and geographic distribution patterns for optimizing outreach."},
+{k:["custom","workflow","form","field","configur","flexible","template"],s:"Custom Workflows",r:"BeePurple offers customizable fields, forms, and workflows through an intuitive admin interface. No coding required. Organizations can create custom data collection forms, define workflow stages, configure validation rules, and build assessment instruments."},
+{k:["coordination","referral","partner","integration","continuum","handoff","interoperab"],s:"Care Coordination",r:"BeePurple supports multi-organization coordination with role-based access, shared profiles with consent management, and referral tracking. Enables seamless handoffs between crisis services, treatment, housing, and recovery support."},
+{k:["evidence","best practice","fidelity","quality improvement","ebi"],s:"EBP Support",r:"BeePurple tracks adherence to evidence-based practice standards, monitors fidelity metrics, and generates quality improvement reports. Configurable workflows prompt staff to complete required assessments according to best-practice timelines."},
+{k:["peer","peer support","recovery coach","community health worker"],s:"Peer Services",r:"Designed for peer recovery support documentation. Peers can document encounters, track recovery capital, log wellness check-ins, schedule follow-ups, and document referrals from mobile devices in the field."},
+{k:["court","judicial","drug court","treatment court","compliance monitoring"],s:"Treatment Courts",r:"Supports treatment court programs: participant phase tracking, compliance monitoring, judicial review scheduling, drug testing tracking, sanction/incentive logging, and outcome measurement per NADCP/All Rise standards."},
+{k:["housing","sober living","recovery house","bed","occupancy"],s:"Recovery Housing",r:"Manages recovery housing including bed assignments, occupancy monitoring, resident progress tracking, incident documentation, and outcomes reporting for funders and accreditation bodies."},
+{k:["implementation","deployment","training","timeline","onboard"],s:"Implementation",r:"Full implementation support: configuration (Weeks 1-2), training (Weeks 3-4), pilot launch (Week 5), full deployment (Weeks 6-8), ongoing support. Led by customer success team experienced in recovery center environments."},
+{k:["cost","budget","price","afford","sustainab","roi"],s:"Pricing",r:"Designed for non-profit sustainability. Pricing based on org size and users, with implementation, training, and support included. No hidden fees. Contact get.beepurple.com for proposal-specific pricing."},
+{k:["healing transition","case study","proven","validated","rapid responder"],s:"Evidence",r:"Validated through Healing Transitions Rapid Responder Program in Wake County, NC. Published impact study documented improvements in client engagement, follow-up consistency, data-driven decision-making, and organized outreach prioritizing highest-need individuals."},
+];
 
-function RfpDetail({ rfp, onBack }) {
-  const reqs = jp(rfp.requirements);
-  const icps = jp(rfp.icp_types);
-  return <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-    <button onClick={onBack} style={{ alignSelf: "flex-start", padding: "6px 16px", borderRadius: 8, border: "1px solid " + C.border, background: C.surface, color: C.textMuted, fontSize: 12, fontFamily: ff, cursor: "pointer" }}>← Back</button>
-    <Card>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}><AB a={rfp.angle} /><SB s={rfp.status} />{rfp.verified ? <B bg="rgba(92,192,126,0.15)" fg={C.ok}>✓ VERIFIED</B> : null}<FB s={rfp.fit_score || 0} /></div>
-      <h2 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 700, color: C.text }}>{rfp.title}</h2>
-      <p style={{ margin: "0 0 4px", fontSize: 13, color: C.textMuted }}>{rfp.agency} • {rfp.state}</p>
-      <p style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: C.ok }}>{rfp.amount}</p>
-      {rfp.deadline && <div style={{ padding: "10px 14px", background: "rgba(232,169,77,0.08)", borderRadius: 8, borderLeft: "3px solid " + C.warn, marginBottom: 12 }}>
-        <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: C.warn }}>📆 Deadline: {new Date(rfp.deadline).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>
-        {rfp.deadline_note && <p style={{ margin: "4px 0 0", fontSize: 12, color: C.text }}>{rfp.deadline_note}</p>}
+function matchNofo(text){
+  var qs=text.split("\n").filter(function(l){return l.trim().length>8;});
+  var questions=[],cur="";
+  for(var i=0;i<qs.length;i++){
+    var t=qs[i].trim();
+    var isNew=/^\d+[.]\s|^[a-zA-Z][.]\s|^[-]\s|^Describe|^Explain|^Provide|^How |^What /.test(t);
+    if(isNew&&cur){questions.push(cur);cur=t;}
+    else if(isNew){cur=t;}
+    else{cur+=" "+t;}
+  }
+  if(cur.trim().length>5)questions.push(cur.trim());
+  if(questions.length===0&&text.trim().length>5)questions.push(text.trim());
+  return questions.map(function(q){
+    var ql=q.toLowerCase();
+    var scored=KB.map(function(cap){
+      var sc=0;
+      cap.k.forEach(function(key){if(ql.indexOf(key)>=0)sc+=2;});
+      cap.k.forEach(function(key){key.split(" ").forEach(function(w){if(w.length>3&&ql.indexOf(w)>=0)sc+=0.5;});});
+      return{s:cap.s,r:cap.r,score:sc};
+    }).filter(function(c){return c.score>0;}).sort(function(a,b){return b.score-a.score;});
+    var resp=scored.length===0
+      ?"BeePurple addresses this requirement through its purpose-built Recovery Center CRM providing HIPAA-compliant client tracking, demographic profiling, outcome measurement, and impact reporting. SOC 2 Type II certified. Validated through Healing Transitions.\n\n[Customize this response with specific details from the NOFO question.]"
+      :scored.slice(0,3).map(function(c){return c.r;}).join("\n\n");
+    if(scored.length>0&&resp.indexOf("Healing")<0)resp+="\n\nValidated through Healing Transitions Rapid Responder Program in Wake County, NC.";
+    var conf=scored.length>0?(scored[0].score>=4?"high":scored[0].score>=2?"medium":"low"):"low";
+    return{q:q,caps:scored.slice(0,3).map(function(s){return s.s;}),conf:conf,r:resp};
+  });
+}
+
+// UI Components
+function Bd({bg,fg,children}){return <span style={{display:"inline-block",padding:"3px 10px",borderRadius:20,fontSize:10,fontWeight:700,fontFamily:f,background:bg,color:fg,textTransform:"uppercase"}}>{children}</span>;}
+function Chip({active,onClick,children}){return <button onClick={onClick} style={{padding:"5px 14px",borderRadius:20,border:"1px solid "+(active?C.gd:C.bd),background:active?C.gm:"transparent",color:active?C.gl:C.mu,fontSize:11,fontWeight:600,fontFamily:f,cursor:"pointer"}}>{children}</button>;}
+function Card({children,style,onClick}){return <div onClick={onClick} style={{background:C.cd,borderRadius:12,border:"1px solid "+C.bd,padding:"16px 20px",...style}}>{children}</div>;}
+function SC({label,value,color}){return <div style={{background:C.cd,borderRadius:10,padding:"12px 14px",border:"1px solid "+C.bd}}><p style={{margin:0,fontSize:10,fontWeight:600,color:C.mu,textTransform:"uppercase"}}>{label}</p><p style={{margin:"4px 0 0",fontSize:22,fontWeight:800,color:color||C.tx}}>{value}</p></div>;}
+
+function DirectoryTab({items}){return <div style={{display:"flex",flexDirection:"column",gap:12}}>
+  <div style={{padding:"10px 14px",background:C.pm,borderRadius:8,borderLeft:"3px solid "+C.pp}}><p style={{margin:0,fontSize:12,fontWeight:700,color:C.pl}}>Recovery Centers with NO CRM</p><p style={{margin:"4px 0 0",fontSize:11,color:C.tx}}>From beepurple.com/states, job postings, SAMHSA grants, state provider networks. Using Excel/paper = need BeePurple.</p></div>
+  {items.sort(function(a,b){var p={hot:0,high:1,medium:2};return(p[a.priority]!==undefined?p[a.priority]:3)-(p[b.priority]!==undefined?p[b.priority]:3);}).map(function(d){return <Card key={d.id} style={{borderLeftWidth:3,borderLeftColor:d.priority==="hot"?C.ht:C.wn}}>
+    <div style={{display:"flex",gap:6,marginBottom:6}}><Bd bg={C.ht+"22"} fg={C.ht}>NO CRM</Bd><Bd bg={(d.priority==="hot"?C.ht:C.wn)+"22"} fg={d.priority==="hot"?C.ht:C.wn}>{d.priority.toUpperCase()}</Bd></div>
+    <h3 style={{margin:"0 0 4px",fontSize:14,fontWeight:700,color:C.tx}}>{d.org}</h3>
+    <p style={{margin:"0 0 4px",fontSize:12,color:C.mu}}>{d.city}, {d.state} | {d.source}</p>
+    <p style={{margin:0,fontSize:12,color:C.wn,fontWeight:600}}>{d.signal}</p>
+  </Card>;})}
+</div>;}
+function PeerPipeTab({items,emailStatus,toggleEmail}){
+  var[expanded,setExpanded]=useState(null);
+  var[emailView,setEmailView]=useState(null);
+  var[copied,setCopied]=useState("");
+  var[section,setSection]=useState("all");
+  function cp(text,label){try{navigator.clipboard.writeText(text);}catch(e){}setCopied(label);setTimeout(function(){setCopied("");},2000);}
+  var sorted=items.sort(function(a,b){var p={hot:0,high:1,medium:2};return(p[a.priority]!==undefined?p[a.priority]:3)-(p[b.priority]!==undefined?p[b.priority]:3);});
+  var filtered=section==="all"?sorted:sorted.filter(function(p){return p.priority===section;});
+  return <div style={{display:"flex",flexDirection:"column",gap:12}}>
+  <div style={{padding:"10px 14px",background:C.tm,borderRadius:8,borderLeft:"3px solid "+C.tl}}><p style={{margin:0,fontSize:12,fontWeight:700,color:C.tl}}>Peer Field Navigator Market Intelligence</p><p style={{margin:"4px 0 0",fontSize:11,color:C.tx}}>48 states certify peer specialists. BeePurple Classic provides mobile documentation. The Peer Field Navigator is the ONLY tool with all 50 states' peer credentials, billing codes, and payer data in one place. Click any state for full rationale, contacts, next steps, and ready-to-send outreach email.</p></div>
+  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(100px, 1fr))",gap:8}}><SC label="States Tracked" value={items.length} color={C.tl}/><SC label="Total Peers" value={(items.reduce(function(s,p){return s+p.certified;},0)/1000).toFixed(1)+"K+"} color={C.ok}/><SC label="Hot States" value={items.filter(function(p){return p.priority==="hot";}).length} color={C.ht}/><SC label="Medicaid Active" value={items.filter(function(p){return p.medicaid;}).length} color={C.gd}/></div>
+  <div style={{display:"flex",gap:6,flexWrap:"wrap"}}><Chip active={section==="all"} onClick={function(){setSection("all");}}>All States</Chip><Chip active={section==="hot"} onClick={function(){setSection("hot");}}>Hot</Chip><Chip active={section==="high"} onClick={function(){setSection("high");}}>High</Chip></div>
+  {filtered.map(function(p){var isExp=expanded===p.state;return <Card key={p.state} style={{borderLeftWidth:3,borderLeftColor:p.priority==="hot"?C.ht:C.wn,cursor:"pointer"}} onClick={function(){setExpanded(isExp?null:p.state);setEmailView(null);}}>
+    <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}><div style={{display:"flex",gap:6}}><Bd bg={(p.priority==="hot"?C.ht:C.wn)+"22"} fg={p.priority==="hot"?C.ht:C.wn}>{p.priority.toUpperCase()}</Bd><Bd bg="rgba(92,192,126,0.15)" fg={C.ok}>MEDICAID ACTIVE</Bd>{p.contacts&&<Bd bg={C.pm} fg={C.pl}>{p.contacts.length} CONTACTS</Bd>}</div><span style={{fontSize:16,fontWeight:800,color:C.tx}}>{p.certified.toLocaleString()}+</span></div>
+    <h3 style={{margin:"0 0 4px",fontSize:15,fontWeight:700,color:C.tx}}>{p.state}{p.state==="Kansas"?" \uD83C\uDFE0":p.state==="North Carolina"?" \u2B50":""}</h3>
+    <p style={{margin:0,fontSize:12,color:C.mu}}>{isExp?"Click to collapse \u25B2":"Click for full details, contacts & email template \u25BC"}</p>
+    {isExp&&<div style={{marginTop:12}} onClick={function(e){e.stopPropagation();}}>
+      <div style={{padding:"10px 12px",background:"rgba(77,184,168,0.08)",borderRadius:6,marginBottom:10}}>
+        <p style={{margin:0,fontSize:11,fontWeight:700,color:C.tl,textTransform:"uppercase",letterSpacing:0.5}}>Why This State Is In The Pipeline</p>
+        <p style={{margin:"6px 0 0",fontSize:12,color:C.tx,lineHeight:1.6}}>{p.whyHere}</p>
+      </div>
+      <div style={{padding:"10px 12px",background:(p.priority==="hot"?"rgba(255,68,68,0.06)":"rgba(232,169,77,0.06)"),borderRadius:6,marginBottom:10}}>
+        <p style={{margin:0,fontSize:11,fontWeight:700,color:p.priority==="hot"?C.ht:C.wn,textTransform:"uppercase",letterSpacing:0.5}}>Why {p.priority.toUpperCase()} Priority</p>
+        <p style={{margin:"6px 0 0",fontSize:12,color:C.tx,lineHeight:1.6}}>{p.whyPriority}</p>
+      </div>
+      <div style={{padding:"10px 12px",background:"rgba(155,107,194,0.08)",borderRadius:6,marginBottom:10}}>
+        <p style={{margin:0,fontSize:11,fontWeight:700,color:C.pl,textTransform:"uppercase",letterSpacing:0.5}}>Next Steps to Engage</p>
+        {p.nextSteps.split("\n").map(function(s,i){return <p key={i} style={{margin:i===0?"6px 0 2px":"2px 0",fontSize:12,color:C.tx,lineHeight:1.5}}>{s}</p>;})}
+      </div>
+      {p.contacts&&p.contacts.length>0&&<div style={{padding:"10px 12px",background:"rgba(212,168,83,0.08)",borderRadius:6,marginBottom:10}}>
+        <p style={{margin:"0 0 8px",fontSize:11,fontWeight:700,color:C.gd,textTransform:"uppercase",letterSpacing:0.5}}>Key Contacts</p>
+        {p.contacts.map(function(c,i){return <div key={i} style={{padding:"6px 8px",background:C.sf,borderRadius:4,marginBottom:4}}>
+          <p style={{margin:0,fontSize:12,fontWeight:700,color:C.tx}}>{c.name}</p>
+          <p style={{margin:"2px 0 0",fontSize:11,color:C.mu}}>{c.role}</p>
+          <div style={{display:"flex",gap:8,marginTop:4,flexWrap:"wrap"}}>
+            {c.email&&<span onClick={function(){cp(c.email,c.name);}} style={{fontSize:11,color:C.tl,cursor:"pointer"}}>{copied===c.name?"\u2705 Copied!":c.email+" \uD83D\uDCCB"}</span>}<EmailTag emailKey={c.email} emailStatus={emailStatus} toggleEmail={toggleEmail}/>
+            {c.phone&&<span style={{fontSize:11,color:C.mu}}>{c.phone}</span>}
+          </div>
+        </div>;})}
       </div>}
-      <p style={{ fontSize: 14, color: C.text, lineHeight: 1.7, marginBottom: 16 }}>{rfp.overview}</p>
-      {rfp.fit_reason && <div style={{ padding: "12px 16px", background: C.purpleDim, borderRadius: 8, borderLeft: "3px solid " + C.purple, marginBottom: 12 }}>
-        <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: C.purpleLight }}>🐝 BeePurple Fit Analysis</p>
-        <p style={{ margin: "6px 0 0", fontSize: 13, color: C.text, lineHeight: 1.6 }}>{rfp.fit_reason}</p>
+      {p.bpFeatures&&p.bpFeatures.length>0&&<div style={{padding:"10px 12px",background:"rgba(155,107,194,0.06)",borderRadius:6,marginBottom:10,border:"1px solid rgba(155,107,194,0.15)"}}>
+        <p style={{margin:"0 0 8px",fontSize:11,fontWeight:700,color:C.pl,textTransform:"uppercase",letterSpacing:0.5}}>\uD83D\uDC1D BeePurple Features That Help {p.state}</p>
+        {p.bpFeatures.map(function(f,i){return <div key={i} style={{padding:"6px 8px",background:C.sf,borderRadius:4,marginBottom:4,borderLeft:"2px solid "+C.pp}}>
+          <div style={{display:"flex",gap:6,marginBottom:2}}><Bd bg={C.pm} fg={C.pl}>{f.product}</Bd><span style={{fontSize:12,fontWeight:600,color:C.tx}}>{f.feature}</span></div>
+          <p style={{margin:0,fontSize:11,color:C.mu,lineHeight:1.5}}>{f.why}</p>
+        </div>;})}
       </div>}
-      {reqs.length > 0 && <div style={{ marginBottom: 12 }}><p style={{ fontSize: 12, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", marginBottom: 8 }}>Requirements</p>{reqs.map((r, i) => <div key={i} style={{ padding: "6px 0", borderBottom: "1px solid " + C.border, fontSize: 13, color: C.text }}>• {r}</div>)}</div>}
-      {icps.length > 0 && <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}><span style={{ fontSize: 11, color: C.textMuted, fontWeight: 600 }}>ICPs:</span>{icps.map(t => <B key={t} bg={C.goldDim} fg={C.goldLight}>{BP.icpTypes.find(i => i.id === t)?.label || t}</B>)}</div>}
-      {rfp.source_url && <div style={{ marginTop: 12 }}><a href={rfp.source_url} target="_blank" rel="noreferrer" style={{ display: "inline-block", padding: "10px 20px", borderRadius: 8, background: "linear-gradient(135deg," + C.gold + "," + C.purple + ")", color: C.white, fontSize: 13, fontWeight: 700, textDecoration: "none" }}>View Original Listing →</a></div>}
-    </Card>
+      <div style={{display:"flex",gap:8,marginBottom:8}}>
+        <button onClick={function(){setEmailView(emailView===p.state?null:p.state);}} style={{flex:1,padding:"8px 12px",background:emailView===p.state?C.pp:C.el,color:C.tx,border:"none",borderRadius:6,fontSize:12,fontWeight:600,cursor:"pointer"}}>{emailView===p.state?"\u25B2 Hide Email Template":"\uD83D\uDCE7 View Outreach Email Template"}</button>
+        {emailView===p.state&&<button onClick={function(){cp("Subject: "+p.emailSubject+"\n\n"+p.emailBody,p.state+"-email");}} style={{padding:"8px 12px",background:C.ok,color:C.bg,border:"none",borderRadius:6,fontSize:12,fontWeight:600,cursor:"pointer"}}>{copied===p.state+"-email"?"\u2705 Copied!":"\uD83D\uDCCB Copy Email"}</button>}
+      </div>
+      {emailView===p.state&&<div style={{padding:"10px 12px",background:C.sf,borderRadius:6,border:"1px solid "+C.bd}}>
+        <p style={{margin:"0 0 6px",fontSize:11,fontWeight:700,color:C.wn}}>SUBJECT: {p.emailSubject}</p>
+        <pre style={{margin:0,fontSize:11,color:C.tx,lineHeight:1.6,whiteSpace:"pre-wrap",fontFamily:f}}>{p.emailBody}</pre>
+      </div>}
+    </div>}
+  </Card>;})}
+</div>;}
+function SettleTab({items,emailStatus,toggleEmail}){return <div style={{display:"flex",flexDirection:"column",gap:12}}>
+  <div style={{padding:"10px 14px",background:C.gm,borderRadius:8,borderLeft:"3px solid "+C.gd}}><p style={{margin:0,fontSize:12,fontWeight:700,color:C.gd}}>$50B+ Opioid Settlement Funds Deploying NOW</p><p style={{margin:"4px 0 0",fontSize:11,color:C.tx}}>States earmarking for recovery tech. Position BeePurple before allocations finalize.</p></div>
+  {items.sort(function(a,b){var p={hot:0,high:1,medium:2};return(p[a.priority]!==undefined?p[a.priority]:3)-(p[b.priority]!==undefined?p[b.priority]:3);}).map(function(s){return <Card key={s.state} style={{borderLeftWidth:3,borderLeftColor:s.priority==="hot"?C.ht:C.wn}}>
+    <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:6,marginBottom:6}}>
+      <div style={{display:"flex",gap:6}}><Bd bg={(s.priority==="hot"?C.ht:C.wn)+"22"} fg={s.priority==="hot"?C.ht:C.wn}>{s.priority.toUpperCase()}</Bd><Bd bg={s.tech==="Yes"?"rgba(92,192,126,0.15)":C.gm} fg={s.tech==="Yes"?C.ok:C.gd}>TECH: {s.tech}</Bd></div>
+      <span style={{fontSize:16,fontWeight:800,color:C.ok}}>{s.funds}</span>
+    </div>
+    <h3 style={{margin:"0 0 4px",fontSize:15,fontWeight:700,color:C.tx}}>{s.state}</h3>
+    <p style={{margin:"0 0 4px",fontSize:12,color:C.gd,fontWeight:600}}>{s.dm} | {s.contact}{s.contact.includes("@")&&<EmailTag emailKey={s.contact} emailStatus={emailStatus} toggleEmail={toggleEmail}/>}</p>
+    <p style={{margin:0,fontSize:12,color:C.tx,lineHeight:1.5}}>{s.note}</p>
+  </Card>;})}
+</div>;}
+
+function EmailTag({emailKey,emailStatus,toggleEmail}){
+  if(!emailKey)return null;
+  var val=emailStatus[emailKey]||null;
+  var btnS={padding:"2px 7px",borderRadius:4,fontSize:9,fontWeight:700,cursor:"pointer",border:"none",marginLeft:4};
+  return <span style={{display:"inline-flex",gap:2,alignItems:"center"}}>
+    <button onClick={function(e){e.stopPropagation();toggleEmail(emailKey,"na");}} style={Object.assign({},btnS,{background:val==="na"?"rgba(212,114,114,0.2)":"transparent",color:val==="na"?C.ht:C.dm,border:"1px solid "+(val==="na"?C.ht:C.bd)})}>N/A</button>
+    <button onClick={function(e){e.stopPropagation();toggleEmail(emailKey,"tg");}} style={Object.assign({},btnS,{background:val==="tg"?"rgba(92,192,126,0.2)":"transparent",color:val==="tg"?C.ok:C.dm,border:"1px solid "+(val==="tg"?C.ok:C.bd)})}>TG</button>
+  </span>;
+}
+
+function RfpStatusBar({rfpId,rfpStatus,toggleRfp}){
+  var val=rfpStatus[rfpId]||null;
+  var opts=[{k:"na",l:"N/A",c:C.ht},{k:"in_progress",l:"In Progress",c:C.wn},{k:"submitted",l:"Submitted",c:C.ok}];
+  return <div style={{display:"flex",gap:4,flexWrap:"wrap"}} onClick={function(e){e.stopPropagation();}}>
+    {opts.map(function(o){var active=val===o.k;return <button key={o.k} onClick={function(){toggleRfp(rfpId,o.k);}} style={{padding:"3px 10px",borderRadius:5,fontSize:10,fontWeight:700,cursor:"pointer",border:"1px solid "+(active?o.c:C.bd),background:active?o.c+"22":"transparent",color:active?o.c:C.dm}}>{active?"✓ ":""}{o.l}</button>;})}
   </div>;
 }
 
-function App() {
-  const [tab, setTab] = useState("pipeline");
-  const [rfps, setRfps] = useState([]);
-  const [leads, setLeads] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [sel, setSel] = useState(null);
-  const [loading, setLoading] = useState(true);
+function PipelineTab({rfps,onSelect,rfpStatus,toggleRfp,emailStatus,toggleEmail}){
+  var[af,setAf]=useState("all");
+  var filtered=rfps.filter(function(r){return af==="all"||r.angle===af;}).sort(function(a,b){return b.fit_score-a.fit_score;});
+  return <div style={{display:"flex",flexDirection:"column",gap:12}}>
+    <div style={{display:"flex",gap:8}}><Chip active={af==="all"} onClick={function(){setAf("all");}}>All</Chip><Chip active={af==="beepurple"} onClick={function(){setAf("beepurple");}}>Direct</Chip><Chip active={af==="icp"} onClick={function(){setAf("icp");}}>ICP</Chip></div>
+    {filtered.map(function(r){return <Card key={r.id} onClick={function(){onSelect(r);}} style={{cursor:"pointer",borderLeftWidth:3,borderLeftColor:r.angle==="beepurple"?C.pp:C.gd}}>
+      <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8,marginBottom:8}}>
+        <div style={{display:"flex",gap:6}}><Bd bg={r.angle==="beepurple"?C.pm:C.gm} fg={r.angle==="beepurple"?C.pl:C.gl}>{r.angle==="beepurple"?"BEEPURPLE":"ICP"}</Bd><Bd bg={C.tm} fg={C.tl}>{r.status.toUpperCase()}</Bd>{r.verified&&<Bd bg="rgba(92,192,126,0.15)" fg={C.ok}>VERIFIED</Bd>}</div>
+        <Bd bg={r.fit_score>=90?"rgba(92,192,126,0.15)":"rgba(232,169,77,0.15)"} fg={r.fit_score>=90?C.ok:C.wn}>{r.fit_score}% FIT</Bd>
+      </div>
+      <h3 style={{margin:"0 0 4px",fontSize:15,fontWeight:700,color:C.tx}}>{r.title}</h3>
+      <p style={{margin:"0 0 6px",fontSize:12,color:C.mu}}>{r.agency} - {r.state}</p>
+      <p style={{margin:"0 0 8px",fontSize:13,color:C.tx,lineHeight:1.5}}>{r.overview}</p>
+      <span style={{fontSize:13,fontWeight:700,color:C.ok}}>{r.amount}</span>
+      {r.contacts&&r.contacts.length>0&&<div style={{marginTop:8,display:"flex",flexWrap:"wrap",gap:4}}>{r.contacts.slice(0,3).map(function(c,i){return <Bd key={i} bg={C.tm} fg={C.tl}>{c.name}</Bd>;})}{r.contacts.length>3&&<Bd bg={C.el} fg={C.mu}>+{r.contacts.length-3} more</Bd>}</div>}
+      <div style={{marginTop:8}}><RfpStatusBar rfpId={r.id} rfpStatus={rfpStatus} toggleRfp={toggleRfp}/></div>
+    </Card>;})}
+  </div>;
+}
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const [r, l, e] = await Promise.allSettled([
-          fetch(API + "/api/rfps").then(r => r.json()),
-          fetch(API + "/api/leads").then(r => r.json()),
-          fetch(API + "/api/events").then(r => r.json()),
-        ]);
-        if (r.status === "fulfilled" && r.value?.rfps) setRfps(r.value.rfps);
-        if (l.status === "fulfilled" && l.value?.leads) setLeads(l.value.leads);
-        if (e.status === "fulfilled" && e.value?.events) setEvents(e.value.events);
-      } catch (err) { console.error(err); }
-      setLoading(false);
-    })();
-  }, []);
+function LeadsTab({leads,emailStatus,toggleEmail}){
+  var[tf,setTf]=useState("all");
+  var types={settlement:{i:"S",c:C.gd},job_signal:{i:"J",c:C.wn},award:{i:"A",c:C.ok},new_org:{i:"N",c:C.tl},competitor:{i:"C",c:C.pl},awardee:{i:"$",c:C.ok}};
+  var filtered=leads.filter(function(l){return l.type!=="contact"&&(tf==="all"||l.type===tf);}).sort(function(a,b){var p={hot:0,high:1,medium:2};return(p[a.priority]!==undefined?p[a.priority]:3)-(p[b.priority]!==undefined?p[b.priority]:3);});
+  return <div style={{display:"flex",flexDirection:"column",gap:12}}>
+    <div style={{display:"flex",gap:6,flexWrap:"wrap"}}><Chip active={tf==="all"} onClick={function(){setTf("all");}}>All</Chip><Chip active={tf==="awardee"} onClick={function(){setTf("awardee");}}>Awardees</Chip><Chip active={tf==="settlement"} onClick={function(){setTf("settlement");}}>Settlements</Chip><Chip active={tf==="job_signal"} onClick={function(){setTf("job_signal");}}>Excel Signals</Chip><Chip active={tf==="award"} onClick={function(){setTf("award");}}>Awards</Chip><Chip active={tf==="competitor"} onClick={function(){setTf("competitor");}}>Competitors</Chip><Chip active={tf==="new_org"} onClick={function(){setTf("new_org");}}>New Orgs</Chip></div>
+    {filtered.map(function(l){var t=types[l.type]||{i:"?",c:C.mu};var pc={hot:C.ht,high:C.wn,medium:C.tl};return <Card key={l.id} style={{borderLeftWidth:3,borderLeftColor:pc[l.priority]||C.bd}}>
+      <div style={{display:"flex",gap:6,marginBottom:8}}><Bd bg={t.c+"22"} fg={t.c}>{l.type.replace("_"," ").toUpperCase()}</Bd><Bd bg={(pc[l.priority]||C.mu)+"22"} fg={pc[l.priority]||C.mu}>{l.priority.toUpperCase()}</Bd></div>
+      <h3 style={{margin:"0 0 4px",fontSize:14,fontWeight:700,color:C.tx}}>{l.title}</h3>
+      {l.org!=="Multiple"&&<p style={{margin:"0 0 4px",fontSize:12,color:C.mu}}>{l.org}{l.state?" - "+l.state:""}</p>}
+      <p style={{margin:"0 0 6px",fontSize:12,color:C.tx,lineHeight:1.5}}>{l.signal}</p>
+      {l.url&&<a href={l.url} target="_blank" rel="noreferrer" style={{fontSize:12,color:C.tl}}>View Source</a>}
+    </Card>;})}
+  </div>;
+}
 
-  const st = useMemo(() => ({ rfps: rfps.length, bp: rfps.filter(r => r.angle === "beepurple").length, icp: rfps.filter(r => r.angle === "icp").length, leads: leads.length, hot: leads.filter(l => l.priority === "hot").length, contacts: leads.filter(l => l.type === "contact").length, comps: leads.filter(l => l.type === "competitor").length, events: events.length }), [rfps, leads, events]);
-  const tabs = [{ id: "pipeline", l: "📄 RFPs", n: st.rfps }, { id: "leads", l: "🎯 Leads", n: st.leads - st.contacts - st.comps, bc: st.hot > 0 ? C.hot : null }, { id: "contacts", l: "👤 Contacts", n: st.contacts }, { id: "competitors", l: "🔄 Competitors", n: st.comps }, { id: "events", l: "📅 Events", n: st.events }];
+function ContactsTab({leads,emailStatus,toggleEmail}){
+  var[search,setSearch]=useState("");
+  var[sf,setSf]=useState("all");
+  var allContacts=leads.filter(function(l){return l.type==="contact";});
+  var naCount=allContacts.filter(function(c){return c.email&&emailStatus[c.email]==="na";}).length;
+  var tgCount=allContacts.filter(function(c){return c.email&&emailStatus[c.email]==="tg";}).length;
+  var noneCount=allContacts.filter(function(c){return !c.email||!emailStatus[c.email];}).length;
+  var contacts=allContacts.filter(function(c){
+    if(sf==="na")return c.email&&emailStatus[c.email]==="na";
+    if(sf==="tg")return c.email&&emailStatus[c.email]==="tg";
+    if(sf==="none")return !c.email||!emailStatus[c.email];
+    return true;
+  }).filter(function(c){
+    if(!search)return true;
+    var s=search.toLowerCase();
+    return (c.ct_name||"").toLowerCase().includes(s)||(c.org||"").toLowerCase().includes(s)||(c.email||"").toLowerCase().includes(s)||(c.state||"").toLowerCase().includes(s);
+  }).sort(function(a,b){var p={hot:0,high:1,medium:2};return(p[a.priority]!==undefined?p[a.priority]:3)-(p[b.priority]!==undefined?p[b.priority]:3);});
+  return <div style={{display:"flex",flexDirection:"column",gap:12}}>
+    <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+      <input value={search} onChange={function(e){setSearch(e.target.value);}} placeholder="Search name, org, email, state..." style={{padding:"6px 12px",borderRadius:6,border:"1px solid "+C.bd,background:C.sf,color:C.tx,fontSize:12,fontFamily:f,flex:"1 1 200px",minWidth:150}}/>
+      <Chip active={sf==="all"} onClick={function(){setSf("all");}}>All ({allContacts.length})</Chip>
+      <Chip active={sf==="none"} onClick={function(){setSf("none");}}>Untagged ({noneCount})</Chip>
+      <Chip active={sf==="tg"} onClick={function(){setSf("tg");}}>TG ({tgCount})</Chip>
+      <Chip active={sf==="na"} onClick={function(){setSf("na");}}>N/A ({naCount})</Chip>
+    </div>
+    <div style={{overflowX:"auto"}}><table style={{width:"100%",borderCollapse:"collapse",fontFamily:f,fontSize:12}}>
+    <thead><tr>{["","Name","Title","Organization","State","Email","Status"].map(function(h){return <th key={h} style={{padding:"10px 8px",textAlign:"left",fontSize:10,fontWeight:700,textTransform:"uppercase",color:C.mu,borderBottom:"2px solid "+C.bd,whiteSpace:"nowrap"}}>{h}</th>;})}</tr></thead>
+    <tbody>{contacts.map(function(c){var pc={hot:C.ht,high:C.wn,medium:C.tl};var es=c.email?emailStatus[c.email]||null:null;return <tr key={c.id} style={{borderBottom:"1px solid "+C.bd,background:es==="na"?"rgba(212,114,114,0.04)":es==="tg"?"rgba(92,192,126,0.04)":"transparent"}}>
+      <td style={{padding:8}}><Bd bg={(pc[c.priority]||C.mu)+"22"} fg={pc[c.priority]||C.mu}>{c.priority.toUpperCase()}</Bd></td>
+      <td style={{padding:8,color:C.tx,fontWeight:600,whiteSpace:"nowrap"}}>{c.ct_name}{c.url&&<>{" "}<a href={c.url} target="_blank" rel="noreferrer" style={{fontSize:10,color:"#0A66C2"}}>in</a></>}</td>
+      <td style={{padding:8,color:C.mu,fontSize:11}}>{c.ct_title}</td>
+      <td style={{padding:8,color:C.gl,fontWeight:600,whiteSpace:"nowrap"}}>{c.org}</td>
+      <td style={{padding:8,color:C.mu}}>{c.state}</td>
+      <td style={{padding:8}}>{c.email?<span style={{fontSize:11,color:C.tl}}>{c.email}</span>:<span style={{fontSize:10,color:C.dm}}>{"\u2014"}</span>}</td>
+      <td style={{padding:8}}>{c.email?<EmailTag emailKey={c.email} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:<span style={{fontSize:10,color:C.dm}}>{"\u2014"}</span>}</td>
+    </tr>;})}</tbody>
+  </table></div>
+  </div>;
+}
 
-  return <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: ff }}>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <style>{`* { box-sizing: border-box; } ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: ${C.bg}; } ::-webkit-scrollbar-thumb { background: ${C.border}; border-radius: 3px; }`}</style>
-    <header style={{ background: C.surface, borderBottom: "1px solid " + C.border, padding: "12px 20px" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}><span style={{ fontSize: 26 }}>🐝</span><div><h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: C.text }}>BeePurple Sales Pipeline</h1><p style={{ margin: 0, fontSize: 11, color: C.textMuted }}>RFPs • Lead Intelligence • Events • Contacts</p></div></div>
-        <div style={{ display: "flex", gap: 8 }}>{st.hot > 0 && <B bg="rgba(255,68,68,0.15)" fg={C.hot}>🔥 {st.hot} hot</B>}<B bg={C.tealDim} fg={C.teal}>{st.rfps + st.leads} tracked</B></div>
+function EventsTab({events}){
+  var[expanded,setExpanded]=useState(null);
+  var[emailView,setEmailView]=useState(null);
+  var[copied,setCopied]=useState("");
+  function cp(t,l){try{navigator.clipboard.writeText(t);}catch(e){}setCopied(l);setTimeout(function(){setCopied("");},2000);}
+  var sorted=events.slice().sort(function(a,b){var p={hot:0,high:1,medium:2};var pd=(p[a.priority]!==undefined?p[a.priority]:3)-(p[b.priority]!==undefined?p[b.priority]:3);if(pd!==0)return pd;return new Date(a.date)-new Date(b.date);});
+  function attendReason(ev,m){
+    var reasons={award:{},lead:{},contact:{},settlement:{}};
+    if(m.type==="award"){
+      if(ev.id==="e7")return "NAADAC members include addiction treatment orgs — "+m.name+" likely sending staff for CEUs and peer recovery sessions.";
+      if(ev.id==="e1")return "NatCon draws CCBHC and behavioral health orgs — "+m.name+" as a SAMHSA grantee likely attends for compliance updates and networking.";
+      if(ev.id==="e6")return "BRI Opioid Congress covers settlement fund management and MAT expansion — "+m.name+"'s grant work aligns with key sessions.";
+      if(ev.id==="e8")return "NASMHPD is for state commissioners — "+m.name+" interfaces with state agencies for grant compliance and reporting.";
+      if(ev.id==="e9")return "ARCHway focuses on treatment centers and RCOs in Arkansas region — "+m.name+" operates in neighboring states.";
+      if(ev.id==="e3")return "RISE26 is for drug court professionals — "+m.name+" likely partners with drug courts for client referrals.";
+      if(ev.id==="e4")return "Oklahoma Momentum is ODMHSAS's own conference — "+m.name+" operates in the ODMHSAS network.";
+      return m.name+"'s program area ("+m.detail+") aligns with this event's ICP focus.";
+    }
+    if(m.type==="settlement"){
+      if(ev.id==="e8")return m.name.replace(" Settlement","")+" decision-makers attend NASMHPD to coordinate with other state directors on settlement spending strategy.";
+      if(ev.id==="e2")return "Block Grant Conference brings state agencies — "+m.name.replace(" Settlement","")+" officials attend to discuss funding allocation including settlement integration.";
+      if(ev.id==="e6")return "BRI Congress has dedicated sessions on settlement fund management — "+m.name.replace(" Settlement","")+" officials likely present or attend.";
+      return m.name.replace(" Settlement","")+" state officials likely attend to discuss funding strategies.";
+    }
+    if(m.type==="lead"){
+      if(m.detail&&m.detail.indexOf("ODMHSAS")>=0&&ev.id==="e4")return "ODMHSAS network member — this is their home conference.";
+      if(m.detail&&m.detail.indexOf("Kansas")>=0&&ev.id==="e7")return "Kansas-based org — NAADAC is in Kansas City, essentially a home conference.";
+      return m.name+" operates in the "+ev.icps.map(function(ic){return(ICP.find(function(i){return i.id===ic;})||{l:ic}).l;}).join("/")+(" space — likely sends staff for professional development.");
+    }
+    if(m.type==="contact"){
+      return m.name+" is a decision-maker in the "+ev.icps.map(function(ic){return(ICP.find(function(i){return i.id===ic;})||{l:ic}).l;}).join("/")+(" sector — key conferences are standard for networking and vendor meetings.");
+    }
+    return "Likely attendee based on ICP overlap.";
+  }
+  function getMatches(ev){
+    var m=[];
+    AWARDS.forEach(function(a){a.icpType&&ev.icps.indexOf(a.icpType)>=0&&m.push({type:"award",name:a.org,detail:a.program+" — "+a.amount,contact:a.contact,email:a.email,linkedin:a.linkedin||null});});
+    LEADS.filter(function(l){return l.type!=="contact";}).forEach(function(l){l.icp&&ev.icps.indexOf(l.icp)>=0&&m.push({type:"lead",name:l.name,detail:l.note||"",contact:l.contact||"",email:l.email||"",linkedin:l.linkedin||null});});
+    LEADS.filter(function(l){return l.type==="contact";}).forEach(function(l){l.icp&&ev.icps.indexOf(l.icp)>=0&&m.push({type:"contact",name:l.name,detail:l.title||"",contact:l.contact||l.name,email:l.email||"",linkedin:l.linkedin||null});});
+    SETTLE.forEach(function(s){
+      var stateMatch=false;ev.icps.forEach(function(ic){if(ic==="state_doh")stateMatch=true;});
+      if(stateMatch&&s.priority==="hot")m.push({type:"settlement",name:s.state+" Settlement",detail:s.funds,contact:s.dm,email:s.contact});
+    });
+    return m;
+  }
+  function genEmail(ev,match){
+    var days=Math.ceil((new Date(ev.date)-new Date())/86400000);
+    var when=days>0?"in "+days+" days":"soon";
+    return "Subject: BeePurple at "+ev.name+" — Let's connect\n\nHi "+(match.contact||"there")+",\n\nI noticed we'll both be at "+ev.name+" "+when+" in "+ev.city+". I'm with BeePurple — we build the Recovery Center CRM used by organizations like Healing Transitions for client tracking, peer documentation, SAMHSA reporting, and grant compliance.\n\nGiven your work"+(match.detail?" with "+match.detail:"")+", I think a 10-minute conversation could be valuable. Our Addiction Field Navigator and Peer Field Navigator are purpose-built tools that no other platform offers.\n\nWould you have time for a quick coffee or meeting at the event?\n\nBest,\n[Your Name]\nBeePurple | Recovery Center CRM\nbeepurple.com";
+  }
+  return <div style={{display:"flex",flexDirection:"column",gap:12}}>
+    <div style={{padding:"10px 14px",background:C.gm,borderRadius:8,borderLeft:"3px solid "+C.gd}}><p style={{margin:0,fontSize:12,fontWeight:700,color:C.gd}}>Conference War Room</p><p style={{margin:"4px 0 0",fontSize:11,color:C.tx}}>Cross-referenced with Awards, Leads, Contacts, and Settlements. Expand to see likely attendees, why they'd be there, and generate pre-event outreach.</p></div>
+  {sorted.map(function(ev){
+    var days=Math.ceil((new Date(ev.date)-new Date())/86400000);
+    var matches=getMatches(ev);
+    var isExp=expanded===ev.id;
+    return <Card key={ev.id} onClick={function(){setExpanded(isExp?null:ev.id);setEmailView(null);}} style={{cursor:"pointer",borderLeftWidth:3,borderLeftColor:ev.priority==="hot"?C.ht:C.wn}}>
+      <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+        <div style={{display:"flex",gap:6}}><Bd bg={ev.priority==="hot"?C.ht+"22":C.wn+"22"} fg={ev.priority==="hot"?C.ht:C.wn}>{ev.priority.toUpperCase()}</Bd>{matches.length>0&&<Bd bg="rgba(92,192,126,0.15)" fg={C.ok}>{matches.length} MATCHES</Bd>}</div>
+        <Bd bg={days<=7?C.ht+"22":days<=60?C.wn+"22":C.tl+"22"} fg={days<=7?C.ht:days<=60?C.wn:C.tl}>{days>0?days+" DAYS":"PAST"}</Bd>
+      </div>
+      <h3 style={{margin:"0 0 6px",fontSize:16,fontWeight:700,color:C.tx}}>{ev.name}</h3>
+      <p style={{margin:"0 0 6px",fontSize:12,color:C.gd}}>{ev.city} — {new Date(ev.date).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})}</p>
+      <p style={{margin:"0 0 8px",fontSize:13,color:C.tx,lineHeight:1.6}}>{ev.desc}</p>
+      <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:8}}>{ev.icps.map(function(t){return <Bd key={t} bg={C.pm} fg={C.pl}>{(ICP.find(function(i){return i.id===t;})||{l:t}).l}</Bd>;})}</div>
+      <div style={{display:"flex",gap:10,flexWrap:"wrap"}} onClick={function(e){e.stopPropagation();}}>
+        {ev.url&&<a href={ev.url} target="_blank" rel="noreferrer" style={{fontSize:12,color:C.tl}}>Event Website ↗</a>}
+        {ev.linkedin&&<a href={ev.linkedin} target="_blank" rel="noreferrer" style={{fontSize:12,color:"#0A66C2"}}>LinkedIn ↗</a>}
+      </div>
+      {isExp&&matches.length>0&&<div style={{marginTop:12,borderTop:"1px solid "+C.bd,paddingTop:12}} onClick={function(e){e.stopPropagation();}}>
+        <p style={{margin:"0 0 8px",fontSize:12,fontWeight:700,color:C.gd}}>Likely Connections at This Event ({matches.length}):</p>
+        {matches.map(function(m,i){var tmap={award:{bg:"rgba(92,192,126,0.15)",fg:C.ok,l:"AWARD"},lead:{bg:C.gm,fg:C.gd,l:"LEAD"},contact:{bg:C.pm,fg:C.pl,l:"CONTACT"},settlement:{bg:C.ht+"22",fg:C.ht,l:"$$$ SETTLE"}};var tc=tmap[m.type]||tmap.lead;
+          var emailKey=ev.id+"-"+i;
+          var showEmail=emailView===emailKey;
+          var emailText=genEmail(ev,m);
+          return <div key={i} style={{background:C.el,borderRadius:8,padding:"10px 12px",marginBottom:8,border:"1px solid "+C.bd}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+              <div style={{display:"flex",gap:6,alignItems:"center"}}><Bd bg={tc.bg} fg={tc.fg}>{tc.l}</Bd><span style={{fontSize:13,fontWeight:700,color:C.tx}}>{m.name}</span></div>
+            </div>
+            {m.detail&&<p style={{margin:"0 0 2px",fontSize:12,color:C.mu}}>{m.detail}</p>}
+            {m.email&&<p style={{margin:"0 0 4px",fontSize:11,color:C.tl}}>{m.contact} — {m.email}{m.linkedin&&<> · <a href={m.linkedin} target="_blank" rel="noreferrer" style={{color:"#0A66C2",fontWeight:600}}>LinkedIn ↗</a></>}</p>}
+            <p style={{margin:"0 0 8px",fontSize:11,color:C.gl,fontStyle:"italic",lineHeight:1.4}}>Why here: {attendReason(ev,m)}</p>
+            <div style={{display:"flex",gap:6}}>
+              <button onClick={function(){setEmailView(showEmail?null:emailKey);}} style={{padding:"4px 10px",borderRadius:6,border:"1px solid "+C.pp,background:showEmail?C.pm:"transparent",color:C.pl,fontSize:11,fontWeight:600,cursor:"pointer"}}>{showEmail?"Hide Email":"View Email"}</button>
+              <button onClick={function(){cp(emailText,"copy-"+emailKey);}} style={{padding:"4px 10px",borderRadius:6,border:"1px solid "+C.gd,background:copied==="copy-"+emailKey?C.ok+"22":C.gm,color:copied==="copy-"+emailKey?C.ok:C.gd,fontSize:11,fontWeight:600,cursor:"pointer"}}>{copied==="copy-"+emailKey?"✓ Copied!":"Copy Email"}</button>
+            </div>
+            {showEmail&&<div style={{marginTop:8,background:C.sf,borderRadius:8,padding:"12px 14px",border:"1px solid "+C.bd,whiteSpace:"pre-wrap",fontSize:12,color:C.tx,lineHeight:1.6,fontFamily:"monospace"}}>{emailText}</div>}
+          </div>;
+        })}
+      </div>}
+      {isExp&&matches.length===0&&<p style={{marginTop:12,fontSize:12,color:C.mu,fontStyle:"italic"}}>No direct matches in current leads/awards — good cold outreach opportunity.</p>}
+    </Card>;
+  })}</div>;
+}
+
+function RfpDetail({rfp,onBack,rfpStatus,toggleRfp,emailStatus,toggleEmail}){
+  var[showGen,setShowGen]=useState(false);
+  var[nofoText,setNofoText]=useState("");
+  var[nofoResults,setNofoResults]=useState([]);
+  var[copied,setCopied]=useState("");
+  var isBP=rfp.angle==="beepurple";
+  var reqs=rfp.requirements||[];
+  var icps=rfp.icp_types||[];
+
+  function cp(text,label){try{navigator.clipboard.writeText(text);}catch(e){}setCopied(label);setTimeout(function(){setCopied("");},2000);}
+
+  var execSummary="BeePurple, a HIPAA-compliant Recovery Center CRM by 5CRM, proposes to serve as the technology platform for \""+rfp.title+".\" Purpose-built for behavioral health recovery, BeePurple provides client tracking, demographic profiling, scheduling, impact reporting, and Naloxone/NRT tracking (KitKeeper).\n\nSOC 2 Type II certified. Deployed with Healing Transitions (Raleigh, NC) whose Rapid Responder Program demonstrated measurable improvements in client engagement and data-driven decision-making. National Recovery Centers Directory spanning all 50 states.";
+
+  var techApproach=reqs.map(function(r,i){
+    var rl=r.toLowerCase();
+    var resp=
+      rl.indexOf("hipaa")>=0||rl.indexOf("security")>=0?"BeePurple is HIPAA-compliant with BAA execution, AES-256 encryption, TLS 1.2+, and SOC 2 Type II certification.":
+      rl.indexOf("client")>=0||rl.indexOf("tracking")>=0||rl.indexOf("participant")>=0?"BeePurple provides comprehensive individual-level tracking: demographics, assessments, milestones, service encounters, and treatment plans in a single searchable profile.":
+      rl.indexOf("report")>=0||rl.indexOf("outcome")>=0||rl.indexOf("compliance")>=0?"BeePurple's Impact Reporting engine generates custom reports for program impact, GPRA/NOMS compliance, demographics, and funder-specific templates with visual dashboards.":
+      rl.indexOf("mobile")>=0||rl.indexOf("field")>=0?"BeePurple is fully mobile-responsive for field workers and peer specialists. No app installation required.":
+      rl.indexOf("schedule")>=0||rl.indexOf("appointment")>=0?"BeePurple manages appointments, follow-up reminders, and automated notifications. Proven to improve retention at Healing Transitions.":
+      "BeePurple's comprehensive recovery CRM addresses this through integrated client tracking, reporting, and custom workflows designed for behavioral health.";
+    return "Requirement "+(i+1)+": "+r+"\nBeePurple Response: "+resp;
+  }).join("\n\n");
+
+  var icpProposal="TECHNOLOGY INFRASTRUCTURE & DATA MANAGEMENT\n(Draft for [Organization Name] - \""+rfp.title+"\")\n\nA. Technology Platform\n[Organization Name] will utilize BeePurple, a HIPAA-compliant Recovery Center CRM (SOC 2 Type II certified), as the primary technology platform. Currently deployed with Healing Transitions (NC) with validated outcomes.\n\nB. Requirements Alignment\n"+reqs.map(function(r,i){return(i+1)+". "+r+"\nResponse: BeePurple addresses this through its integrated platform with client tracking, outcome reporting, and custom workflows.";}).join("\n\n")+"\n\nC. Implementation: Weeks 1-2 config, Weeks 3-4 training, Week 5 pilot, Weeks 6-8 full deploy.\n\nD. Security: HIPAA compliant, SOC 2 Type II, AES-256 encryption, 42 CFR Part 2 consent management.\n\nE. Evidence: Validated at Healing Transitions Rapid Responder Program, Wake County, NC.\n\nF. Budget: License based on org size. Implementation, training, support included.\nContact: get.beepurple.com";
+
+  var icpEmail="Subject: Technology Partner for \""+rfp.title+"\"\n\nDear [Decision-Maker],\n\n[Organization Name] appears to be an excellent candidate for \""+rfp.title+"\" ("+rfp.amount+" through "+rfp.agency+").\n\nThis funding requires technology for recovery tracking, client management, and impact reporting. BeePurple provides exactly this as a HIPAA-compliant Recovery Center CRM.\n\nHow BeePurple strengthens your application:\n- PROVEN: Deployed at Healing Transitions with published impact study\n- COMPLIANT: SOC 2 Type II, HIPAA, built-in SAMHSA reporting\n- FAST: Cloud-based, operational in weeks\n- AFFORDABLE: Purpose-built for nonprofits\n\nDeadline: "+(rfp.deadline?new Date(rfp.deadline).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}):"TBD")+"\n\nWould 15 minutes this week work?\n\nBeePurple Team\nbeepurple.com | get.beepurple.com";
+
+  return <div style={{display:"flex",flexDirection:"column",gap:16}}>
+    <button onClick={onBack} style={{alignSelf:"flex-start",padding:"6px 16px",borderRadius:8,border:"1px solid "+C.bd,background:C.sf,color:C.mu,fontSize:12,fontFamily:f,cursor:"pointer"}}>Back</button>
+    <Card>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:12}}>
+        <Bd bg={isBP?C.pm:C.gm} fg={isBP?C.pl:C.gl}>{isBP?"BEEPURPLE":"ICP"}</Bd>
+        <Bd bg={C.tm} fg={C.tl}>{rfp.status.toUpperCase()}</Bd>
+        {rfp.verified&&<Bd bg="rgba(92,192,126,0.15)" fg={C.ok}>VERIFIED</Bd>}
+        <Bd bg={rfp.fit_score>=90?"rgba(92,192,126,0.15)":C.gm} fg={rfp.fit_score>=90?C.ok:C.wn}>{rfp.fit_score}%</Bd>
+      </div>
+      <h2 style={{margin:"0 0 8px",fontSize:20,fontWeight:700,color:C.tx}}>{rfp.title}</h2>
+      <div style={{marginBottom:10}}><RfpStatusBar rfpId={rfp.id} rfpStatus={rfpStatus} toggleRfp={toggleRfp}/></div>
+      <p style={{margin:"0 0 4px",fontSize:13,color:C.mu}}>{rfp.agency} - {rfp.state}</p>
+      <p style={{margin:"0 0 12px",fontSize:14,fontWeight:700,color:C.ok}}>{rfp.amount}</p>
+      {rfp.deadline&&<div style={{padding:"10px 14px",background:"rgba(232,169,77,0.08)",borderRadius:8,borderLeft:"3px solid "+C.wn,marginBottom:12}}><p style={{margin:0,fontSize:12,fontWeight:600,color:C.wn}}>Deadline: {new Date(rfp.deadline).toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"})}</p></div>}
+      <p style={{fontSize:14,color:C.tx,lineHeight:1.7,marginBottom:16}}>{rfp.overview}</p>
+      {rfp.fit_reason&&<div style={{padding:"12px 16px",background:C.pm,borderRadius:8,borderLeft:"3px solid "+C.pp,marginBottom:12}}><p style={{margin:0,fontSize:12,fontWeight:700,color:C.pl}}>BeePurple Fit Analysis</p><p style={{margin:"6px 0 0",fontSize:13,color:C.tx,lineHeight:1.6}}>{rfp.fit_reason}</p></div>}
+      {reqs.length>0&&<div style={{marginBottom:12}}><p style={{fontSize:12,fontWeight:700,color:C.mu,textTransform:"uppercase",marginBottom:8}}>Requirements</p>{reqs.map(function(r,i){return <div key={i} style={{padding:"6px 0",borderBottom:"1px solid "+C.bd,fontSize:13,color:C.tx}}>{"- "+r}</div>;})}</div>}
+      {icps.length>0&&<div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:16}}>{icps.map(function(t){return <Bd key={t} bg={C.gm} fg={C.gl}>{(ICP.find(function(i){return i.id===t;})||{l:t}).l}</Bd>;})}</div>}
+
+      {rfp.contacts&&rfp.contacts.length>0&&<div style={{marginBottom:16,padding:"14px 16px",background:C.sf,borderRadius:10,border:"1px solid "+C.bd}}>
+        <p style={{margin:"0 0 10px",fontSize:12,fontWeight:700,color:C.mu,textTransform:"uppercase",letterSpacing:0.5}}>Key Contacts for This RFP</p>
+        {rfp.contacts.map(function(ct,i){return <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 0",borderBottom:i<rfp.contacts.length-1?"1px solid "+C.bd:"none",flexWrap:"wrap",gap:4}}>
+          <div style={{flex:"1 1 200px"}}>
+            <span style={{fontSize:13,fontWeight:700,color:C.tx}}>{ct.name}</span>
+            <span style={{fontSize:11,color:C.mu,marginLeft:8}}>{ct.role}</span>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:6}}>
+            {ct.email?<span style={{fontSize:11,color:C.tl}}>{ct.email}</span>:<span style={{fontSize:10,color:C.dm}}>No email</span>}
+            {ct.email&&<EmailTag emailKey={ct.email} emailStatus={emailStatus} toggleEmail={toggleEmail}/>}
+          </div>
+        </div>;})}
+      </div>}
+
+      <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+        {rfp.source_url&&<a href={rfp.source_url} target="_blank" rel="noreferrer" style={{padding:"10px 20px",borderRadius:8,background:C.tm,color:C.tl,fontSize:13,fontWeight:600,textDecoration:"none"}}>View Original</a>}
+        <button onClick={function(){setShowGen(!showGen);}} style={{padding:"10px 20px",borderRadius:8,border:"none",background:"linear-gradient(135deg,"+C.gd+","+C.pp+")",color:C.wh,fontSize:13,fontWeight:700,cursor:"pointer"}}>{showGen?"Hide":"Generate"} {isBP?"Submission":"Outreach Package"}</button>
+      </div>
+    </Card>
+
+    {showGen&&<Card style={{border:"1px solid "+(isBP?C.pp:C.gd)}}>
+      <h3 style={{margin:"0 0 16px",fontSize:16,fontWeight:700,color:C.tx}}>{isBP?"Auto-Generated Submission":"Auto-Generated ICP Outreach"}</h3>
+
+      {isBP?<div>
+        <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}><h4 style={{margin:0,fontSize:13,fontWeight:700,color:C.gd}}>EXECUTIVE SUMMARY</h4><button onClick={function(){cp(execSummary,"exec");}} style={{padding:"4px 12px",borderRadius:6,border:"1px solid "+C.gd,background:C.gm,color:C.gl,fontSize:10,fontWeight:600,cursor:"pointer"}}>{copied==="exec"?"Copied!":"Copy"}</button></div>
+        <pre style={{background:C.bg,borderRadius:8,padding:16,fontFamily:f,fontSize:12,color:C.tx,lineHeight:1.6,whiteSpace:"pre-wrap",border:"1px solid "+C.bd}}>{execSummary}</pre>
+        <div style={{display:"flex",justifyContent:"space-between",marginTop:16,marginBottom:8}}><h4 style={{margin:0,fontSize:13,fontWeight:700,color:C.gd}}>TECHNICAL APPROACH</h4><button onClick={function(){cp(techApproach,"tech");}} style={{padding:"4px 12px",borderRadius:6,border:"1px solid "+C.gd,background:C.gm,color:C.gl,fontSize:10,fontWeight:600,cursor:"pointer"}}>{copied==="tech"?"Copied!":"Copy"}</button></div>
+        <pre style={{background:C.bg,borderRadius:8,padding:16,fontFamily:f,fontSize:12,color:C.tx,lineHeight:1.6,whiteSpace:"pre-wrap",border:"1px solid "+C.bd,maxHeight:400,overflow:"auto"}}>{techApproach}</pre>
+      </div>:<div>
+        <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}><h4 style={{margin:0,fontSize:13,fontWeight:700,color:C.tl}}>PROPOSAL SECTION DRAFT</h4><button onClick={function(){cp(icpProposal,"prop");}} style={{padding:"4px 12px",borderRadius:6,border:"1px solid "+C.tl,background:C.tm,color:C.tl,fontSize:10,fontWeight:600,cursor:"pointer"}}>{copied==="prop"?"Copied!":"Copy"}</button></div>
+        <p style={{fontSize:11,color:C.mu,margin:"0 0 10px"}}>Insert into the ICP's proposal submission. Positions BeePurple as technology partner.</p>
+        <pre style={{background:C.bg,borderRadius:8,padding:16,fontFamily:f,fontSize:11,color:C.tx,lineHeight:1.6,whiteSpace:"pre-wrap",border:"1px solid "+C.bd,maxHeight:400,overflow:"auto"}}>{icpProposal}</pre>
+        <div style={{display:"flex",justifyContent:"space-between",marginTop:16,marginBottom:4}}><h4 style={{margin:0,fontSize:13,fontWeight:700,color:C.gd}}>OUTREACH EMAIL TEMPLATE</h4><button onClick={function(){cp(icpEmail,"email");}} style={{padding:"4px 12px",borderRadius:6,border:"1px solid "+C.gd,background:C.gm,color:C.gl,fontSize:10,fontWeight:600,cursor:"pointer"}}>{copied==="email"?"Copied!":"Copy"}</button></div>
+        <p style={{fontSize:11,color:C.mu,margin:"0 0 10px"}}>Send to decision-makers from the Contacts tab.</p>
+        <pre style={{background:C.bg,borderRadius:8,padding:16,fontFamily:f,fontSize:12,color:C.tx,lineHeight:1.6,whiteSpace:"pre-wrap",border:"1px solid "+C.bd,maxHeight:300,overflow:"auto"}}>{icpEmail}</pre>
+      </div>}
+
+      <div style={{borderTop:"1px solid "+C.bd,paddingTop:20,marginTop:20}}>
+        <h4 style={{margin:"0 0 8px",fontSize:14,fontWeight:700,color:C.wn}}>NOFO Question Responder</h4>
+        <p style={{fontSize:12,color:C.mu,margin:"0 0 12px",lineHeight:1.5}}>Paste real questions from the NOFO/RFP below. Each will be matched against BeePurple's 18 capability areas.</p>
+        <textarea value={nofoText} onChange={function(e){setNofoText(e.target.value);}} placeholder={"Paste NOFO questions here, e.g.:\n1. Describe the technology platform for tracking participant outcomes.\n2. How will data security and HIPAA compliance be ensured?\n3. Describe mobile capabilities for field-based outreach workers."} style={{width:"100%",minHeight:140,padding:16,borderRadius:10,background:C.bg,border:"1px solid "+C.bd,color:C.tx,fontFamily:f,fontSize:13,lineHeight:1.6,resize:"vertical",outline:"none"}} />
+        <button onClick={function(){if(nofoText.trim())setNofoResults(matchNofo(nofoText));}} disabled={!nofoText.trim()} style={{marginTop:10,padding:"10px 24px",borderRadius:8,border:"none",background:nofoText.trim()?"linear-gradient(135deg,#E8A94D,#D47272)":C.el,color:nofoText.trim()?C.wh:C.dm,fontSize:13,fontWeight:700,cursor:nofoText.trim()?"pointer":"not-allowed",fontFamily:f}}>Generate Responses</button>
+
+        {nofoResults.length>0&&<div style={{marginTop:16,display:"flex",flexDirection:"column",gap:12}}>
+          <div style={{display:"flex",gap:8}}>
+            <Bd bg="rgba(92,192,126,0.15)" fg={C.ok}>{nofoResults.filter(function(r){return r.conf==="high";}).length} HIGH</Bd>
+            <Bd bg={C.gm} fg={C.gd}>{nofoResults.filter(function(r){return r.conf==="medium";}).length} MED</Bd>
+            <Bd bg="rgba(212,114,114,0.15)" fg={C.bd2}>{nofoResults.filter(function(r){return r.conf==="low";}).length} REVIEW</Bd>
+          </div>
+          {nofoResults.map(function(nr,i){
+            var cc=nr.conf==="high"?C.ok:nr.conf==="medium"?C.gd:C.bd2;
+            return <div key={i} style={{background:C.bg,borderRadius:10,border:"1px solid "+C.bd,overflow:"hidden"}}>
+              <div style={{padding:"12px 16px",borderBottom:"1px solid "+C.bd,background:C.el}}>
+                <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
+                  <span style={{fontSize:11,fontWeight:700,color:C.mu}}>Q{i+1}</span>
+                  <div style={{display:"flex",gap:4}}><Bd bg={cc+"22"} fg={cc}>{nr.conf.toUpperCase()}</Bd><button onClick={function(){cp(nr.r,"q"+i);}} style={{padding:"3px 10px",borderRadius:6,border:"1px solid "+C.tl,background:C.tm,color:C.tl,fontSize:10,cursor:"pointer"}}>{copied==="q"+i?"Done":"Copy"}</button></div>
+                </div>
+                <p style={{margin:0,fontSize:13,color:C.tx,fontWeight:600}}>{nr.q}</p>
+                {nr.caps.length>0&&<div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:6}}>{nr.caps.map(function(c){return <Bd key={c} bg={C.pm} fg={C.pl}>{c}</Bd>;})}</div>}
+              </div>
+              <div style={{padding:16}}>
+                <pre style={{margin:0,fontFamily:f,fontSize:12,color:C.tx,lineHeight:1.7,whiteSpace:"pre-wrap"}}>{nr.r}</pre>
+                {nr.conf==="low"&&<div style={{marginTop:10,padding:"8px 12px",background:"rgba(212,114,114,0.08)",borderRadius:6,borderLeft:"3px solid "+C.bd2}}><p style={{margin:0,fontSize:11,color:C.bd2}}>Low confidence. Customize with specific details from the NOFO.</p></div>}
+              </div>
+            </div>;
+          })}
+        </div>}
+      </div>
+    </Card>}
+  </div>;
+}
+
+function App(){
+  var[tab,setTab]=useState("pipeline");
+  var[sel,setSel]=useState(null);
+  var[rfpStatus,setRfpStatus]=useState({});
+  var[emailStatus,setEmailStatus]=useState({});
+  function toggleRfp(id,val){setRfpStatus(function(prev){var n=Object.assign({},prev);n[id]=prev[id]===val?null:val;return n;});}
+  function toggleEmail(key,val){setEmailStatus(function(prev){var n=Object.assign({},prev);n[key]=prev[key]===val?null:val;return n;});}
+  var st={rfps:RFPS.length,bp:RFPS.filter(function(r){return r.angle==="beepurple";}).length,icp:RFPS.filter(function(r){return r.angle==="icp";}).length,leads:LEADS.length,hot:LEADS.filter(function(l){return l.priority==="hot";}).length,contacts:LEADS.filter(function(l){return l.type==="contact";}).length,events:EVENTS.length,awards:AWARDS.length,awardsHot:AWARDS.filter(function(a){return a.fit==="hot";}).length};
+  var tabs=[{id:"pipeline",l:"RFPs",n:st.rfps},{id:"awards",l:"Awards",n:st.awards},{id:"directory",l:"No CRM",n:DIRECTORY.length},{id:"peers",l:"Peer Pipeline",n:PEERPIPE.length},{id:"settle",l:"Settlements",n:SETTLE.length},{id:"leads",l:"Leads",n:st.leads-st.contacts},{id:"contacts",l:"Contacts",n:st.contacts},{id:"events",l:"Events",n:st.events}];
+
+  return <div style={{minHeight:"100vh",background:C.bg,color:C.tx,fontFamily:f}}>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <header style={{background:C.sf,borderBottom:"1px solid "+C.bd,padding:"12px 20px"}}>
+      <div style={{maxWidth:1200,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:10}}>
+        <div style={{display:"flex",alignItems:"center",gap:12}}><span style={{fontSize:26}}>{"🐝"}</span><div><h1 style={{margin:0,fontSize:18,fontWeight:700}}>BeePurple Sales Pipeline</h1><p style={{margin:0,fontSize:11,color:C.mu}}>RFPs - Leads - Events - Contacts</p></div></div>
+        <div style={{display:"flex",gap:8}}>{st.hot>0&&<Bd bg={C.ht+"22"} fg={C.ht}>{"🔥"} {st.hot} hot</Bd>}<Bd bg={C.tm} fg={C.tl}>{st.rfps+st.leads} tracked</Bd></div>
       </div>
     </header>
-    <nav style={{ background: C.surface, borderBottom: "1px solid " + C.border, padding: "0 20px", overflowX: "auto" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex" }}>
-        {tabs.map(t => <button key={t.id} onClick={() => { setTab(t.id); setSel(null); }} style={{ padding: "12px 18px", background: "none", border: "none", borderBottom: tab === t.id ? "2px solid " + C.gold : "2px solid transparent", color: tab === t.id ? C.goldLight : C.textMuted, fontSize: 13, fontWeight: 600, fontFamily: ff, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
-          {t.l}<span style={{ padding: "1px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: t.bc ? t.bc + "22" : C.elevated, color: t.bc || C.textMuted }}>{t.n}</span>
-        </button>)}
+    <nav style={{background:C.sf,borderBottom:"1px solid "+C.bd,padding:"0 12px",overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
+      <div style={{maxWidth:1200,margin:"0 auto",display:"flex",minWidth:"max-content"}}>
+        {tabs.map(function(t){return <button key={t.id} onClick={function(){setTab(t.id);setSel(null);}} style={{padding:"10px 12px",background:"none",border:"none",borderBottom:tab===t.id?"2px solid "+C.gd:"2px solid transparent",color:tab===t.id?C.gl:C.mu,fontSize:12,fontWeight:600,fontFamily:f,cursor:"pointer",display:"flex",alignItems:"center",gap:5,whiteSpace:"nowrap"}}>
+          {t.l}<span style={{padding:"1px 6px",borderRadius:10,fontSize:10,fontWeight:700,background:C.el,color:C.mu}}>{t.n}</span>
+        </button>;})}
       </div>
     </nav>
-    <div style={{ background: C.card, borderBottom: "1px solid " + C.border, padding: "12px 20px" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))", gap: 8 }}>
-        <SC label="Total RFPs" value={st.rfps} color={C.text} /><SC label="🐝 Direct" value={st.bp} color={C.purpleLight} /><SC label="🎯 ICP" value={st.icp} color={C.goldLight} /><SC label="🔥 Hot Leads" value={st.hot} color={C.hot} /><SC label="Total Leads" value={st.leads} color={C.teal} /><SC label="📅 Events" value={st.events} color={C.ok} />
+    <div style={{background:C.cd,borderBottom:"1px solid "+C.bd,padding:"12px 20px"}}>
+      <div style={{maxWidth:1200,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(110px, 1fr))",gap:8}}>
+        <SC label="Total RFPs" value={st.rfps}/><SC label="Direct" value={st.bp} color={C.pl}/><SC label="ICP" value={st.icp} color={C.gl}/><SC label="Awards" value={st.awards} color={C.ok}/><SC label="Hot Leads" value={st.hot} color={C.ht}/><SC label="Events" value={st.events} color={C.tl}/>
       </div>
     </div>
-    <main style={{ maxWidth: 1200, margin: "0 auto", padding: "20px 16px" }}>
-      {loading ? <Empty icon="⏳" msg="Loading from BeePurple backend..." /> :
-        sel ? <RfpDetail rfp={sel} onBack={() => setSel(null)} /> :
-        tab === "pipeline" ? <PipelineTab rfps={rfps} onSelect={setSel} /> :
-        tab === "leads" ? <LeadsTab leads={leads} /> :
-        tab === "contacts" ? <ContactsTab leads={leads} /> :
-        tab === "competitors" ? <CompetitorsTab leads={leads} /> :
-        tab === "events" ? <EventsTab events={events} /> : null}
+    <main style={{maxWidth:1200,margin:"0 auto",padding:"20px 16px"}}>
+      {sel?<RfpDetail rfp={sel} onBack={function(){setSel(null);}} rfpStatus={rfpStatus} toggleRfp={toggleRfp} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
+       tab==="pipeline"?<PipelineTab rfps={RFPS} onSelect={setSel} rfpStatus={rfpStatus} toggleRfp={toggleRfp} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
+       tab==="awards"?<AwardsTab awards={AWARDS} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
+       tab==="directory"?<DirectoryTab items={DIRECTORY}/>:
+       tab==="peers"?<PeerPipeTab items={PEERPIPE} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
+       tab==="settle"?<SettleTab items={SETTLE} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
+       tab==="leads"?<LeadsTab leads={LEADS} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
+       tab==="contacts"?<ContactsTab leads={LEADS} emailStatus={emailStatus} toggleEmail={toggleEmail}/>:
+       tab==="events"?<EventsTab events={EVENTS}/>:null}
     </main>
-    <footer style={{ borderTop: "1px solid " + C.border, padding: "12px 20px", textAlign: "center" }}>
-      <p style={{ margin: 0, fontSize: 11, color: C.textDim }}>BeePurple Sales Pipeline • {st.rfps} RFPs • {st.leads} Leads • {st.events} Events</p>
-    </footer>
+    <footer style={{borderTop:"1px solid "+C.bd,padding:"12px 20px",textAlign:"center"}}><p style={{margin:0,fontSize:11,color:C.dm}}>BeePurple Sales Pipeline</p></footer>
   </div>;
 }
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-  </script>
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
 </body>
 </html>
